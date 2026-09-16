@@ -154,10 +154,10 @@ process FETCH_SEQS {
           cp $HOME/.ncbi/user-settings.mkfg /home/qiime2/.ncbi/user-settings.mkfg
           ls /home/qiime2/.ncbi
           echo "Success - required config files were created."
-        else
-          echo "The directory /home/qiime2 does not exist - are you running the pipeline using a Singularity container?"
-          exit 1
-        fi
+#        else
+#          echo "The directory /home/qiime2 does not exist - are you running the pipeline using a Singularity container?"
+#          exit 1
+#        fi
     fi
 
     echo -e "id\n${_id}" > ids.tsv
