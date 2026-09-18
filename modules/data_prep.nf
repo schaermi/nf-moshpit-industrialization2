@@ -21,7 +21,6 @@ process FETCH_GENOMES {
 
 process SIMULATE_READS {
     label "readSimulation"
-    scratch true
     tag "${sample_id}"
     errorStrategy 'retry'
     maxRetries 3
@@ -65,7 +64,6 @@ process SIMULATE_READS {
 
 process SIMULATE_READS_MASON {
     label "readSimulation"
-    scratch true
     tag "${sample_id}"
     errorStrategy 'retry'
     maxRetries 3
@@ -106,7 +104,6 @@ process SIMULATE_READS_MASON {
 process FETCH_SEQS {
     label "fondue"
     label "needsInternet"
-    scratch true
     tag "${_id}"
     errorStrategy { task.exitStatus in [125, 126] ? 'ignore' : 'retry' }
     maxRetries 3
@@ -157,7 +154,7 @@ process FETCH_SEQS {
 #        else
 #          echo "The directory /home/qiime2 does not exist - are you running the pipeline using a Singularity container?"
 #          exit 1
-#        fi
+        fi
     fi
 
     echo -e "id\n${_id}" > ids.tsv
@@ -226,7 +223,6 @@ process SUBSAMPLE_READS {
     label "readSubsampling"
     storeDir params.storeDir
     cpus 1
-    scratch true
     tag "${sample_id}"
 
     input:
@@ -264,7 +260,6 @@ process SUBSAMPLE_READS {
 process PROCESS_READS_FASTP {
     label "fastp"
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
     errorStrategy { task.exitStatus in [125, 126] ? 'ignore' : 'retry' }
     maxRetries 3
@@ -329,7 +324,6 @@ process VISUALIZE_FASTP {
     errorStrategy 'retry'
     time { 2.h * task.attempt }
     publishDir params.publishDir, mode: 'copy'
-    scratch true
 
     input:
     path fastp_reports
@@ -355,7 +349,6 @@ process REMOVE_HOST {
     errorStrategy 'retry'
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
     
     input:
@@ -458,7 +451,6 @@ process FETCH_ARTIFACT {
 
 process IMPORT_READS {
     tag "${_id}"
-    scratch true
     errorStrategy 'retry'
     maxRetries 3
     memory { 2.GB * task.attempt }
@@ -511,7 +503,6 @@ process PARTITION_DEREP_MAGS {
     memory { 4.GB * task.attempt }
     maxRetries 3
     errorStrategy 'retry'
-    scratch true
 
     input:
     path mags_derep
@@ -669,7 +660,6 @@ process COLLATE_PARTITIONS_DEREP {
 
 process TABULATE_READ_COUNTS {
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
     time { 2.h * task.attempt }
     memory { 2.GB * task.attempt }
@@ -931,7 +921,6 @@ PY
 process FILTER_SAMPLES {
     errorStrategy { task.exitStatus == 125 ? 'ignore' : 'retry' }
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
     time { 2.h * task.attempt }
     memory { 2.GB * task.attempt }
@@ -1029,7 +1018,6 @@ process MAKE_REPORT {
     errorStrategy 'retry'
     time { 1.h * task.attempt }
     publishDir params.publishDir, mode: 'copy'
-    scratch true
 
     input:
     val visualizations

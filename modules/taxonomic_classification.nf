@@ -1,7 +1,6 @@
 process CLASSIFY_KRAKEN2 {
     label "taxonomicClassificationKraken2"
     storeDir params.storeDir
-    scratch true
     tag "${_id}"
     memory "${params.taxonomic_classification.kraken2.memory ?: 48}.GB"
     errorStrategy "retry"
@@ -53,7 +52,6 @@ process CLASSIFY_KRAKEN2 {
 process CLASSIFY_KRAKEN2_DEREP {
     label "taxonomicClassificationKraken2"
     storeDir params.storeDir
-    scratch true
     tag "mags-derep"
     errorStrategy "retry"
     maxRetries 3
@@ -101,7 +99,6 @@ process ESTIMATE_BRACKEN {
     errorStrategy "retry"
     maxRetries 3
     storeDir params.storeDir
-    scratch true
 
     input:
     path kraken2_reports
@@ -137,7 +134,6 @@ process GET_KRAKEN_FEATURES {
     errorStrategy "retry"
     maxRetries 3
     storeDir params.storeDir
-    scratch true
 
     input:
     path kraken2_reports
@@ -188,7 +184,6 @@ process MAP_KRAKEN2_TAXONOMY_TO_CONTIGS {
     errorStrategy "retry"
     maxRetries 3
     storeDir params.storeDir
-    // scratch true
 
     input:
     path kraken2_reports
@@ -221,7 +216,6 @@ process COLLAPSE_CONTIGS {
     errorStrategy "retry"
     maxRetries 3
     storeDir params.storeDir
-    // scratch true
 
     input:
     path feature_map
@@ -250,7 +244,6 @@ process COLLAPSE_CONTIGS {
 process CLASSIFY_KAIJU {
     label "taxonomicClassificationKaiju"
     storeDir params.storeDir
-    scratch true
     tag "${_id}"
     memory "${params.taxonomic_classification.kaiju.memory ?: 48}.GB"
     errorStrategy "retry"
@@ -317,7 +310,6 @@ process DRAW_TAXA_BARPLOT {
     memory { 2.GB * task.attempt }
     errorStrategy "retry"
     publishDir params.publishDir, mode: 'copy'
-    scratch true
 
     input:
     path feature_table
@@ -344,9 +336,9 @@ process FETCH_KRAKEN2_DB {
     cpus 1
     memory 2.GB
     time { 1.h * task.attempt }
+    errorStrategy "retry"
     maxRetries 3
     storeDir params.storeDir
-    scratch true
 
     output:
     path params.databases.kraken2.key, emit: kraken2_db
@@ -377,7 +369,6 @@ process FETCH_KAIJU_DB {
     time { 4.h * task.attempt }
     maxRetries 3
     storeDir params.storeDir
-    scratch true
 
     output:
     path params.databases.kaiju.key, emit: kaiju_db

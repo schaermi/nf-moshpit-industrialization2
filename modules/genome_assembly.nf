@@ -3,7 +3,6 @@ process ASSEMBLE_METASPADES {
     errorStrategy 'retry'
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
     
     input:
@@ -35,7 +34,6 @@ process ASSEMBLE_MEGAHIT {
     errorStrategy 'retry'
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
     
     input:
@@ -70,7 +68,6 @@ process EVALUATE_CONTIGS {
     publishDir params.publishDir, mode: 'copy', pattern: '*-contigs.qzv'
     errorStrategy "retry"
     maxRetries 3
-    scratch true
 
     input:
     path contigs_file
@@ -99,7 +96,6 @@ process EVALUATE_CONTIGS_QUAST {
     publishDir params.publishDir, mode: 'copy', pattern: '*-contigs-quast.qzv'
     errorStrategy "retry"
     maxRetries 3
-    scratch true
 
     input:
     path contigs_file
@@ -135,7 +131,6 @@ process EVALUATE_CONTIGS_QUAST_NO_READS {
     publishDir params.publishDir, mode: 'copy', pattern: '*-contigs-quast.qzv'
     errorStrategy "retry"
     maxRetries 3
-    scratch true
 
     input:
     path contigs_file
@@ -168,7 +163,6 @@ process INDEX_CONTIGS {
     errorStrategy 'retry'
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
     
     input:
@@ -198,7 +192,6 @@ process MAP_READS_TO_CONTIGS {
     errorStrategy 'retry'
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
 
     input:
@@ -230,7 +223,6 @@ process FILTER_CONTIGS {
     time { 2.h * task.attempt }
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
     
     input:

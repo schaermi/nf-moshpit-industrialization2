@@ -1,7 +1,6 @@
 process INDEX_DEREP_MAGS {
     label "indexing"
     storeDir params.storeDir
-    scratch true
     errorStrategy 'retry'
 
     input:
@@ -33,7 +32,6 @@ process MAP_READS_TO_DEREP_MAGS {
     errorStrategy 'retry'
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     tag "${_id}"
 
     input:
@@ -69,7 +67,6 @@ process GET_GENOME_LENGTHS {
     time { 20.min * task.attempt }
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     errorStrategy 'retry'
 
     input:
@@ -104,7 +101,6 @@ process GET_GENOME_LENGTHS {
 process ESTIMATE_ABUNDANCE {
     label "abundanceEstimation"
     storeDir params.storeDir
-    scratch true
     errorStrategy 'retry'
 
     input:

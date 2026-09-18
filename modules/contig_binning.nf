@@ -1,7 +1,6 @@
 process BIN_CONTIGS_METABAT {
     label "contigBinningMetabat2"
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
     errorStrategy { task.exitStatus == 125 ? 'ignore' : 'retry' }
     clusterOptions params.binning.metabat2.clusterOptions
@@ -66,7 +65,6 @@ process BIN_CONTIGS_METABAT {
 process BIN_CONTIGS_SEMIBIN2 {
     label "contigBinningSemibin2"
     storeDir params.storeDir
-    scratch true
     tag "${sample_id}"
     errorStrategy { task.exitStatus == 125 ? 'ignore' : 'retry' }
     clusterOptions params.binning.semibin2.clusterOptions
@@ -125,7 +123,6 @@ process BIN_CONTIGS_SEMIBIN2 {
 process EVALUATE_BINS_BUSCO {
     label "busco"
     storeDir params.storeDir
-    scratch true
     tag "${_id}"
     errorStrategy 'retry'
 
@@ -169,7 +166,6 @@ process VISUALIZE_BUSCO {
     memory { 2.GB * task.attempt }
     time { 1.h * task.attempt }
     publishDir params.publishDir, mode: 'copy'
-    scratch true
     errorStrategy 'retry'
     tag "${lineage}"
 
@@ -207,7 +203,6 @@ process FETCH_BUSCO_DB {
     errorStrategy "retry"
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     clusterOptions = "--tmp=200G"
 
     output:
@@ -284,7 +279,6 @@ process FILTER_MAGS {
 process EVALUATE_BINS_CHECKM {
     label "checkm"
     storeDir params.storeDir
-    scratch true
     errorStrategy 'retry'
 
     input:

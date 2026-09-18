@@ -6,7 +6,6 @@ process FETCH_CHOCOPHLAN_DB {
     maxRetries 3
     errorStrategy 'retry'
     storeDir params.storeDir
-    scratch true
 
     output:
     path params.databases.humann3Chocophlan.key, emit: chocophlan_db
@@ -33,7 +32,6 @@ process FETCH_TRANSLATED_SEARCH_DB {
     maxRetries 3
     errorStrategy 'retry'
     storeDir params.storeDir
-    scratch true
 
     output:
     path params.databases.humann3TranslatedSearch.key, emit: translated_search_db
@@ -61,7 +59,6 @@ process FETCH_METAPHLAN_DB {
     maxRetries 3
     errorStrategy 'retry'
     storeDir params.storeDir
-    scratch true
 
     output:
     path params.databases.humann3Metaphlan.key, emit: metaphlan_db
@@ -85,7 +82,6 @@ process FETCH_METAPHLAN_DB {
 process PROFILE_READS_HUMANN {
     label "humann3Profiling"
     storeDir params.storeDir
-    scratch true
     tag "${_id}"
     errorStrategy 'retry'
     maxRetries 2
@@ -191,7 +187,6 @@ process COLLATE_HUMANN_PARTITIONS {
 process CONVERT_HUMANN_GENE_FAMILIES {
     label "humann3Conversion"
     storeDir params.storeDir
-    scratch true
     errorStrategy 'retry'
     maxRetries 3
 
@@ -223,7 +218,6 @@ process CONVERT_HUMANN_GENE_FAMILIES {
 process CONVERT_HUMANN_PATH_ABUNDANCE {
     label "humann3Conversion"
     storeDir params.storeDir
-    scratch true
     errorStrategy 'retry'
     maxRetries 3
 
@@ -255,7 +249,6 @@ process CONVERT_HUMANN_PATH_ABUNDANCE {
 process CONVERT_METAPHLAN_PROFILE {
     label "humann3Conversion"
     storeDir params.storeDir
-    scratch true
     errorStrategy 'retry'
     maxRetries 3
 

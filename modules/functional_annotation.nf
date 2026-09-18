@@ -1,7 +1,6 @@
 process SEARCH_ORTHOLOGS_EGGNOG {
     label "orthologSearch"
     storeDir params.storeDir
-    scratch true
     tag "${_id}"
     errorStrategy 'retry'
     memory "${params.functional_annotation.ortholog_search.memory ?: 10}.GB"
@@ -66,7 +65,6 @@ process SEARCH_ORTHOLOGS_EGGNOG {
 process ANNOTATE_EGGNOG {
     label "functionalAnnotation"
     storeDir params.storeDir
-    scratch true
     tag "${_id}"
     errorStrategy 'retry'
     memory "${params.functional_annotation.annotation.memory ?: 48}.GB"
@@ -119,7 +117,6 @@ process FETCH_DIAMOND_DB {
     maxRetries 3
     errorStrategy 'retry'
     storeDir params.storeDir
-    scratch true
 
     output:
     path params.databases.eggnogOrthologs.key
@@ -145,7 +142,6 @@ process FETCH_EGGNOG_DB {
     time { 2.h * task.attempt }
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     errorStrategy 'retry'
 
     output:
@@ -171,7 +167,6 @@ process EXTRACT_ANNOTATIONS {
     time { 2.h * task.attempt }
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     errorStrategy 'retry'
 
     input:
@@ -216,7 +211,6 @@ process MULTIPLY_TABLES {
     time { 30.min * task.attempt }
     maxRetries 3
     storeDir params.storeDir
-    scratch true
     errorStrategy 'retry'
 
     input:
@@ -250,7 +244,6 @@ process DRAW_ANNOTATION_BARPLOT {
     memory { 2.GB * task.attempt }
     errorStrategy "retry"
     publishDir params.publishDir, mode: 'copy'
-    scratch true
 
     input:
     tuple val(annotation_type), path(feature_table)

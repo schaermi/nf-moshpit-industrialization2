@@ -1,7 +1,6 @@
 process CALCULATE_MINHASHES {
     label "dereplication"
     storeDir params.storeDir
-    scratch true
 
     input:
     path bins_file
@@ -31,7 +30,6 @@ process CALCULATE_MINHASHES {
 process COMPARE_MINHASHES {
     label "dereplication"
     storeDir params.storeDir
-    scratch true
 
     input:
     path hashes_file
@@ -99,7 +97,6 @@ process COMPARE_GENOMES_SKANI {
 process DEREPLICATE_MAGS {
     label "dereplication"
     storeDir params.storeDir
-    scratch true
 
     input:
     path bins_file
