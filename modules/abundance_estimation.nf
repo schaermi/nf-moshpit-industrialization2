@@ -1,7 +1,7 @@
 process INDEX_DEREP_MAGS {
     label "indexing"
     storeDir params.storeDir
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     path(mags_derep_file)
@@ -29,7 +29,7 @@ process INDEX_DEREP_MAGS {
 
 process MAP_READS_TO_DEREP_MAGS {
     label "readMapping"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
     tag "${_id}"
@@ -67,7 +67,7 @@ process GET_GENOME_LENGTHS {
     time { 20.min * task.attempt }
     maxRetries 3
     storeDir params.storeDir
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     path mags_derep_file
@@ -101,7 +101,7 @@ process GET_GENOME_LENGTHS {
 process ESTIMATE_ABUNDANCE {
     label "abundanceEstimation"
     storeDir params.storeDir
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     path mags_derep_index_file

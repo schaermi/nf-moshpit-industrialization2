@@ -22,7 +22,7 @@ process FETCH_GENOMES {
 process SIMULATE_READS {
     label "readSimulation"
     tag "${sample_id}"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -65,7 +65,7 @@ process SIMULATE_READS {
 process SIMULATE_READS_MASON {
     label "readSimulation"
     tag "${sample_id}"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
     clusterOptions params.read_simulation.clusterOptions
@@ -105,7 +105,7 @@ process FETCH_SEQS {
     label "fondue"
     label "needsInternet"
     tag "${_id}"
-    errorStrategy { task.exitStatus in [125, 126] ? 'ignore' : 'retry' }
+    errorStrategy = { Retry.withDelay(task.exitStatus in [125, 126] ? 'ignore' : 'retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -261,7 +261,7 @@ process PROCESS_READS_FASTP {
     label "fastp"
     storeDir params.storeDir
     tag "${sample_id}"
-    errorStrategy { task.exitStatus in [125, 126] ? 'ignore' : 'retry' }
+    errorStrategy = { Retry.withDelay(task.exitStatus in [125, 126] ? 'ignore' : 'retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -321,7 +321,7 @@ process VISUALIZE_FASTP {
     cpus 1
     memory { 4.GB * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     time { 2.h * task.attempt }
     publishDir params.publishDir, mode: 'copy'
 
@@ -346,7 +346,7 @@ process VISUALIZE_FASTP {
 process REMOVE_HOST {
     label "hostRemoval"
     label "needsInternet"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
     tag "${sample_id}"
@@ -430,7 +430,7 @@ process FETCH_ARTIFACT {
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     val cache_key
@@ -451,7 +451,7 @@ process FETCH_ARTIFACT {
 
 process IMPORT_READS {
     tag "${_id}"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     memory { 2.GB * task.attempt }
     time { 2.h * task.attempt }
@@ -502,7 +502,7 @@ process PARTITION_DEREP_MAGS {
     time { 2.h * task.attempt }
     memory { 4.GB * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     path mags_derep
@@ -575,7 +575,7 @@ process COLLATE_PARTITIONS {
     cpus 1
     time { 2.h * task.attempt }
     memory { 2.GB * task.attempt }
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     storeDir params.storeDir
     maxRetries 3
  
@@ -620,7 +620,7 @@ process COLLATE_PARTITIONS_DEREP {
     time { 2.h * task.attempt }
     memory { 2.GB * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     val id_and_paths
@@ -664,7 +664,7 @@ process TABULATE_READ_COUNTS {
     time { 2.h * task.attempt }
     memory { 2.GB * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     
     input:
     tuple val(sample_id), path(reads)
@@ -690,7 +690,7 @@ process TABULATE_READ_COUNTS_BATCH {
     time { 4.h * task.attempt }
     memory { 2.GB * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     tag "${step}"
     publishDir params.traceDir, mode: 'copy'
 
@@ -757,7 +757,7 @@ process MAKE_SAMPLE_REPORT {
     memory { 1.GB * task.attempt }
     time { 30.min * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     publishDir params.traceDir, mode: 'copy'
 
     input:
@@ -800,7 +800,7 @@ process MULTIQC {
     memory { 2.GB * task.attempt }
     time { 30.min * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     publishDir "${params.publishDir}/multiqc", mode: 'copy'
 
     input:
@@ -821,7 +821,7 @@ process REPORT_READ_COUNTS {
     cpus 1
     memory { 2.GB * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     time { 1.h * task.attempt }
     publishDir params.traceDir, mode: 'copy'
 
@@ -919,7 +919,7 @@ PY
 }
 
 process FILTER_SAMPLES {
-    errorStrategy { task.exitStatus == 125 ? 'ignore' : 'retry' }
+    errorStrategy = { Retry.withDelay(task.exitStatus == 125 ? 'ignore' : 'retry', params.retryDelaySeconds) }
     storeDir params.storeDir
     tag "${sample_id}"
     time { 2.h * task.attempt }
@@ -998,7 +998,7 @@ process CLEAN_UP_CACHES {
     time { 2.h * task.attempt }
     memory { 2.GB * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     
     input:
     val dependency
@@ -1015,7 +1015,7 @@ process MAKE_REPORT {
     cpus 1
     memory { 2.GB * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     time { 1.h * task.attempt }
     publishDir params.publishDir, mode: 'copy'
 
@@ -1060,7 +1060,7 @@ process ARCHIVE_SAMPLE_CACHE {
     memory { 2.GB * task.attempt }
     time { 4.h * task.attempt }
     maxRetries 2
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     val sample_id
@@ -1115,7 +1115,7 @@ process REMOVE_FROM_CACHE {
     memory { 500.MB * task.attempt }
     time { 30.min * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     
     input:
     tuple val(sample_id), val(artifact_path)
@@ -1136,7 +1136,7 @@ process FIX_CACHE_PERMISSIONS {
     memory { 500.MB * task.attempt }
     time { 1.h * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     
     input:
     tuple val(id), val(path), val(ready_signal)

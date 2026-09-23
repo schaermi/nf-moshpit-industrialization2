@@ -29,7 +29,7 @@ internetModule: eth_proxy
 email: schaererm@ethz.ch
 
 # Archive the per-sample caches upon completion
-archive: true
+archive: false
 
 retain:
   input: true
@@ -72,8 +72,8 @@ databases:
 #    key:    ""
 #    databaseType: ""
   busco:
-    #cache:  ""
-    #key:    ""
+    cache:  "/cluster/work/bokulich/schaererm/db-cache"
+    key:    "BUSCO_fab_odb12"
     fetchLineages: "bacteria_odb12,fungi_odb12,archaea_odb12"
 #  checkm:
 #    path: ""

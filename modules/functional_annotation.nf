@@ -2,7 +2,7 @@ process SEARCH_ORTHOLOGS_EGGNOG {
     label "orthologSearch"
     storeDir params.storeDir
     tag "${_id}"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     memory "${params.functional_annotation.ortholog_search.memory ?: 10}.GB"
 
     input:
@@ -66,7 +66,7 @@ process ANNOTATE_EGGNOG {
     label "functionalAnnotation"
     storeDir params.storeDir
     tag "${_id}"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     memory "${params.functional_annotation.annotation.memory ?: 48}.GB"
 
     input:
@@ -115,7 +115,7 @@ process FETCH_DIAMOND_DB {
     time { 2.h * task.attempt }
     cpus 1
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     storeDir params.storeDir
 
     output:
@@ -142,7 +142,7 @@ process FETCH_EGGNOG_DB {
     time { 2.h * task.attempt }
     maxRetries 3
     storeDir params.storeDir
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     output:
     path params.databases.eggnogAnnotations.key
@@ -167,7 +167,7 @@ process EXTRACT_ANNOTATIONS {
     time { 2.h * task.attempt }
     maxRetries 3
     storeDir params.storeDir
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     path annotation_file
@@ -211,7 +211,7 @@ process MULTIPLY_TABLES {
     time { 30.min * task.attempt }
     maxRetries 3
     storeDir params.storeDir
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     path table1
@@ -242,7 +242,7 @@ process MULTIPLY_TABLES {
 process DRAW_ANNOTATION_BARPLOT {
     time { 2.h * task.attempt }
     memory { 2.GB * task.attempt }
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     publishDir params.publishDir, mode: 'copy'
 
     input:

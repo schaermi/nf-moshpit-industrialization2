@@ -58,7 +58,7 @@ process COMPARE_MINHASHES {
 
 process COMPARE_GENOMES_SKANI {
     label "dereplication"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
     clusterOptions params.dereplication.skani.clusterOptions

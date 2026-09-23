@@ -2,7 +2,7 @@ process BIN_CONTIGS_METABAT {
     label "contigBinningMetabat2"
     storeDir params.storeDir
     tag "${sample_id}"
-    errorStrategy { task.exitStatus == 125 ? 'ignore' : 'retry' }
+    errorStrategy = { Retry.withDelay(task.exitStatus == 125 ? 'ignore' : 'retry', params.retryDelaySeconds) }
     clusterOptions params.binning.metabat2.clusterOptions
 
     input:
@@ -66,7 +66,7 @@ process BIN_CONTIGS_SEMIBIN2 {
     label "contigBinningSemibin2"
     storeDir params.storeDir
     tag "${sample_id}"
-    errorStrategy { task.exitStatus == 125 ? 'ignore' : 'retry' }
+    errorStrategy = { Retry.withDelay(task.exitStatus == 125 ? 'ignore' : 'retry', params.retryDelaySeconds) }
     clusterOptions params.binning.semibin2.clusterOptions
 
     input:
@@ -124,7 +124,7 @@ process EVALUATE_BINS_BUSCO {
     label "busco"
     storeDir params.storeDir
     tag "${_id}"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     val binner
@@ -166,7 +166,7 @@ process VISUALIZE_BUSCO {
     memory { 2.GB * task.attempt }
     time { 1.h * task.attempt }
     publishDir params.publishDir, mode: 'copy'
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     tag "${lineage}"
 
     input:
@@ -200,7 +200,7 @@ process FETCH_BUSCO_DB {
     cpus 1
     memory 4.GB
     time { 12.h * task.attempt }
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
     clusterOptions = "--tmp=200G"
@@ -230,7 +230,7 @@ process FILTER_MAGS {
     maxRetries 3
     storeDir params.storeDir
     tag "${_id}"
-    errorStrategy { task.exitStatus == 125 ? 'ignore' : 'retry' }
+    errorStrategy = { Retry.withDelay(task.exitStatus == 125 ? 'ignore' : 'retry', params.retryDelaySeconds) }
 
     input:
     val binner
@@ -279,7 +279,7 @@ process FILTER_MAGS {
 process EVALUATE_BINS_CHECKM {
     label "checkm"
     storeDir params.storeDir
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     val binner
@@ -310,7 +310,7 @@ process COLLATE_BUSCO_RESULTS {
     cpus 1
     time { 2.h * task.attempt }
     memory { 4.GB * task.attempt }
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     tag "${lineage}"
 

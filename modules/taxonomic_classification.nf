@@ -3,7 +3,7 @@ process CLASSIFY_KRAKEN2 {
     storeDir params.storeDir
     tag "${_id}"
     memory "${params.taxonomic_classification.kraken2.memory ?: 48}.GB"
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -53,7 +53,7 @@ process CLASSIFY_KRAKEN2_DEREP {
     label "taxonomicClassificationKraken2"
     storeDir params.storeDir
     tag "mags-derep"
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     memory "${params.taxonomic_classification.kraken2.memory}.GB"
 
@@ -96,7 +96,7 @@ process ESTIMATE_BRACKEN {
     cpus 1
     time { 12.h * task.attempt }
     memory { 4.GB * task.attempt }
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
 
@@ -131,7 +131,7 @@ process ESTIMATE_BRACKEN {
 process GET_KRAKEN_FEATURES {
     time { 4.h * task.attempt }
     memory { 2.GB * task.attempt }
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
 
@@ -181,7 +181,7 @@ process GET_KRAKEN_FEATURES {
 process MAP_KRAKEN2_TAXONOMY_TO_CONTIGS {
     time { 4.h * task.attempt }
     memory { 2.GB * task.attempt }
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
 
@@ -213,7 +213,7 @@ process MAP_KRAKEN2_TAXONOMY_TO_CONTIGS {
 process COLLAPSE_CONTIGS {
     time { 4.h * task.attempt }
     memory { 4.GB * task.attempt }
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
 
@@ -246,7 +246,7 @@ process CLASSIFY_KAIJU {
     storeDir params.storeDir
     tag "${_id}"
     memory "${params.taxonomic_classification.kaiju.memory ?: 48}.GB"
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -308,7 +308,7 @@ process CLASSIFY_KAIJU {
 process DRAW_TAXA_BARPLOT {
     time { 2.h * task.attempt }
     memory { 2.GB * task.attempt }
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     publishDir params.publishDir, mode: 'copy'
 
     input:
@@ -336,7 +336,7 @@ process FETCH_KRAKEN2_DB {
     cpus 1
     memory 2.GB
     time { 1.h * task.attempt }
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
 

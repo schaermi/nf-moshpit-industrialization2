@@ -4,7 +4,7 @@ process FETCH_CHOCOPHLAN_DB {
     memory 2.GB
     time { 4.h * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     storeDir params.storeDir
 
     output:
@@ -30,7 +30,7 @@ process FETCH_TRANSLATED_SEARCH_DB {
     memory 2.GB
     time { 4.h * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     storeDir params.storeDir
 
     output:
@@ -57,7 +57,7 @@ process FETCH_METAPHLAN_DB {
     memory 4.GB
     time { 4.h * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     storeDir params.storeDir
 
     output:
@@ -83,7 +83,7 @@ process PROFILE_READS_HUMANN {
     label "humann3Profiling"
     storeDir params.storeDir
     tag "${_id}"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 2
     clusterOptions params.humann3.clusterOptions
 
@@ -151,7 +151,7 @@ process COLLATE_HUMANN_PARTITIONS {
     cpus 1
     time { 2.h * task.attempt }
     memory { 2.GB * task.attempt }
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     storeDir params.storeDir
     maxRetries 3
 
@@ -187,7 +187,7 @@ process COLLATE_HUMANN_PARTITIONS {
 process CONVERT_HUMANN_GENE_FAMILIES {
     label "humann3Conversion"
     storeDir params.storeDir
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -218,7 +218,7 @@ process CONVERT_HUMANN_GENE_FAMILIES {
 process CONVERT_HUMANN_PATH_ABUNDANCE {
     label "humann3Conversion"
     storeDir params.storeDir
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -249,7 +249,7 @@ process CONVERT_HUMANN_PATH_ABUNDANCE {
 process CONVERT_METAPHLAN_PROFILE {
     label "humann3Conversion"
     storeDir params.storeDir
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -281,7 +281,7 @@ process FETCH_HUMANN_ARTIFACT {
     memory { 4.GB * task.attempt }
     time { 2.h * task.attempt }
     maxRetries 3
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
     input:
     val cache_key

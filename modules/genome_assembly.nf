@@ -1,6 +1,6 @@
 process ASSEMBLE_METASPADES {
     label "genomeAssembly"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
     tag "${sample_id}"
@@ -31,7 +31,7 @@ process ASSEMBLE_METASPADES {
 
 process ASSEMBLE_MEGAHIT {
     label "genomeAssembly"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
     tag "${sample_id}"
@@ -66,7 +66,7 @@ process ASSEMBLE_MEGAHIT {
 process EVALUATE_CONTIGS {
     label "contigEvaluation"
     publishDir params.publishDir, mode: 'copy', pattern: '*-contigs.qzv'
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -94,7 +94,7 @@ process EVALUATE_CONTIGS_QUAST {
     label "contigEvaluation"
     label "needsInternet"
     publishDir params.publishDir, mode: 'copy', pattern: '*-contigs-quast.qzv'
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -129,7 +129,7 @@ process EVALUATE_CONTIGS_QUAST_NO_READS {
     label "contigEvaluation"
     label "needsInternet"
     publishDir params.publishDir, mode: 'copy', pattern: '*-contigs-quast.qzv'
-    errorStrategy "retry"
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
 
     input:
@@ -160,7 +160,7 @@ process EVALUATE_CONTIGS_QUAST_NO_READS {
 
 process INDEX_CONTIGS {
     label "indexing"
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
     tag "${sample_id}"
@@ -189,7 +189,7 @@ process INDEX_CONTIGS {
 process MAP_READS_TO_CONTIGS {
     label "readMapping"
     // errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' } 
-    errorStrategy 'retry'
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
     tag "${sample_id}"
@@ -217,7 +217,7 @@ process MAP_READS_TO_CONTIGS {
 }
 
 process FILTER_CONTIGS {
-    errorStrategy { task.exitStatus == 125 ? 'ignore' : 'retry' }
+    errorStrategy = { Retry.withDelay(task.exitStatus == 125 ? 'ignore' : 'retry', params.retryDelaySeconds) }
     cpus 1
     memory { 2.GB * task.attempt }
     time { 2.h * task.attempt }
