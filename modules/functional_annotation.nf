@@ -66,6 +66,7 @@ process ANNOTATE_EGGNOG {
     label "functionalAnnotation"
     storeDir params.storeDir
     tag "${_id}"
+    maxRetries 3
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     memory "${params.functional_annotation.annotation.memory ?: 48}.GB"
 
