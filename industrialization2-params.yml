@@ -16,7 +16,7 @@ container: /cluster/work/bokulich/SINGULARITY_IMGS/moshpit-2026.7.0.sif
 #containerSourmash: /path/to/sourmash.sif
 #containerHumann3: /path/to/humann3.sif
 #containerFastp: /path/to/fastp.sif
-additionalVolumeMounts: "-B /cluster/work/bokulich/DATABASES"
+additionalVolumeMounts: "-B /cluster/work/bokulich/DATABASES -B /cluster/work/bokulich/schaererm/db-cache"
 #additionalContainerOptions: "additional options to be passed to Singularity"
 
 # Name of the HPC module granting Internet access
