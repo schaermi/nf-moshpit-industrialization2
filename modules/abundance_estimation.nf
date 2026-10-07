@@ -30,7 +30,7 @@ process INDEX_DEREP_MAGS {
 process MAP_READS_TO_DEREP_MAGS {
     label "readMapping"
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
-    maxRetries 3
+    maxRetries 4
     storeDir params.storeDir
     tag "${_id}"
 

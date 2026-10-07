@@ -190,7 +190,7 @@ process MAP_READS_TO_CONTIGS {
     label "readMapping"
     // errorStrategy { task.exitStatus in 137..140 ? 'retry' : 'terminate' } 
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
-    maxRetries 3
+    maxRetries 4
     storeDir params.storeDir
     tag "${sample_id}"
 
