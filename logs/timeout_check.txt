@@ -1,0 +1,233 @@
+DEBUG   [U=581621,P=30509] persistentPreRun()            Apptainer version: 1.5.4
+DEBUG   [U=581621,P=30509] persistentPreRun()            Parsing configuration file /etc/apptainer/apptainer.conf
+DEBUG   [U=581621,P=30509] SetBinaryPath()               Setting binary path to /usr/libexec/apptainer/bin:/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/nextflow-23.10.0-e7jlvkwyzmtpzo6denkrlzoyps5fbcu5/bin:/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-12.2.0/openjdk-17.0.8.1_1-qvshugojtuueynroxt4ctycajvhycjgo/bin:/cluster/software/stacks/2024-06/spack/opt/spack/linux-ubuntu22.04-x86_64_v3/gcc-11.4.0/gcc-12.2.0-bj2twcnwcownogkldo6ndfylxx5sqpbn/bin:/cluster/home/schaererm/miniconda3/bin:/cluster/home/schaererm/miniconda3/condabin:/usr/local/bin:/usr/bin:/bin:/cluster/software/bin:/cluster/apps/slurm/bin:/cluster/home/schaererm/.local/bin:/cluster/home/schaererm/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+DEBUG   [U=581621,P=30509] SetBinaryPath()               Using that path for all binaries
+DEBUG   [U=581621,P=30509] handleConfDir()               /cluster/home/schaererm/.apptainer already exists. Not creating.
+DEBUG   [U=581621,P=30509] setUmask()                    Saving umask 0022 for propagation into container
+VERBOSE [U=581621,P=30509] useSuid()                     Unprivileged installation: using user namespace
+DEBUG   [U=581621,P=30509] checkEncryptionKey()          Checking for encrypted system partition
+DEBUG   [U=581621,P=30509] Init()                        Image format detection
+DEBUG   [U=581621,P=30509] Init()                        Check for sandbox image format
+DEBUG   [U=581621,P=30509] Init()                        sandbox format initializer returned: not a directory image
+DEBUG   [U=581621,P=30509] Init()                        Check for sif image format
+DEBUG   [U=581621,P=30509] Init()                        sif image format detected
+DEBUG   [U=581621,P=30509] setCgroups()                  Recording rootless XDG_RUNTIME_DIR / DBUS_SESSION_BUS_ADDRESS
+INFO    [U=581621,P=30509] warnDeprecatedEnvUsage()      Environment variable SINGULARITYENV_TMPDIR is set, but APPTAINERENV_TMPDIR is preferred
+INFO    [U=581621,P=30509] warnDeprecatedEnvUsage()      Environment variable SINGULARITYENV_NXF_TASK_WORKDIR is set, but APPTAINERENV_NXF_TASK_WORKDIR is preferred
+INFO    [U=581621,P=30509] warnDeprecatedEnvUsage()      Environment variable SINGULARITYENV_NXF_DEBUG is set, but APPTAINERENV_NXF_DEBUG is preferred
+INFO    [U=581621,P=30509] warnDeprecatedEnvUsage()      Environment variable SINGULARITYENV_http_proxy is set, but APPTAINERENV_http_proxy is preferred
+INFO    [U=581621,P=30509] warnDeprecatedEnvUsage()      Environment variable SINGULARITYENV_https_proxy is set, but APPTAINERENV_https_proxy is preferred
+INFO    [U=581621,P=30509] warnDeprecatedEnvUsage()      Environment variable SINGULARITYENV_ftp_proxy is set, but APPTAINERENV_ftp_proxy is preferred
+VERBOSE [U=581621,P=30509] setKeyIfNotAlreadyOverridden()Forwarding SINGULARITYENV_TMPDIR as TMPDIR environment variable
+VERBOSE [U=581621,P=30509] setKeyIfNotAlreadyOverridden()Forwarding SINGULARITYENV_NXF_TASK_WORKDIR as NXF_TASK_WORKDIR environment variable
+VERBOSE [U=581621,P=30509] setKeyIfNotAlreadyOverridden()Forwarding SINGULARITYENV_NXF_DEBUG as NXF_DEBUG environment variable
+VERBOSE [U=581621,P=30509] setKeyIfNotAlreadyOverridden()Forwarding SINGULARITYENV_http_proxy as http_proxy environment variable
+VERBOSE [U=581621,P=30509] setKeyIfNotAlreadyOverridden()Forwarding SINGULARITYENV_https_proxy as https_proxy environment variable
+VERBOSE [U=581621,P=30509] setKeyIfNotAlreadyOverridden()Forwarding SINGULARITYENV_ftp_proxy as ftp_proxy environment variable
+VERBOSE [U=581621,P=30509] SetContainerEnv()             Not forwarding APPTAINER_DEBUG environment variable
+DEBUG   [U=581621,P=30509] SetContainerEnv()             Forwarding USER_PATH environment variable
+VERBOSE [U=581621,P=30509] SetContainerEnv()             Setting HOME=/home/qiime2
+VERBOSE [U=581621,P=30509] SetContainerEnv()             Setting PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+DEBUG   [U=581621,P=30509] findOnPath()                  Found "squashfuse_ll" at "/usr/libexec/apptainer/bin/squashfuse_ll"
+DEBUG   [U=581621,P=30509] findOnPath()                  Found "fuse2fs" at "/usr/libexec/apptainer/bin/fuse2fs"
+DEBUG   [U=581621,P=30509] findOnPath()                  Found "fuse-overlayfs" at "/usr/libexec/apptainer/bin/fuse-overlayfs"
+DEBUG   [U=581621,P=30509] findOnPath()                  Found "gocryptfs" at "/usr/libexec/apptainer/bin/gocryptfs"
+DEBUG   [U=581621,P=30509] InitImageDrivers()            squashfuse_ll supports -o uid
+DEBUG   [U=581621,P=30509] InitImageDrivers()            Setting ImageDriver to fuseapps
+DEBUG   [U=581621,P=30509] init()                        Use starter binary /usr/libexec/apptainer/bin/starter
+VERBOSE [U=581621,P=30509]  print()                       Set messagelevel to: 5
+VERBOSE [U=581621,P=30509]  init()                        Starter initialization
+VERBOSE [U=581621,P=30509]  is_suid()                     Check if we are running as setuid: 0
+DEBUG   [U=581621,P=30509]  read_engine_config()          Read engine configuration
+DEBUG   [U=581621,P=30509]  init()                        Wait completion of stage1
+DEBUG   [U=581621,P=30517]  set_parent_death_signal()     Set parent death signal to 9
+VERBOSE [U=581621,P=30517]  init()                        Spawn stage 1
+DEBUG   [U=581621,P=30517] func1()                       executablePath is /usr/libexec/apptainer/bin/starter
+DEBUG   [U=581621,P=30517] func1()                       starter was not relocated from /usr/libexec
+DEBUG   [U=581621,P=30517] func1()                       Install prefix is /usr
+DEBUG   [U=581621,P=30517] startup()                     apptainer runtime engine selected
+VERBOSE [U=581621,P=30517] startup()                     Execute stage 1
+DEBUG   [U=581621,P=30517] StageOne()                    Entering stage 1
+DEBUG   [U=581621,P=30517] SetuidMountAllowed()          Kernel squashfs mount not allowed because ECL not activated
+DEBUG   [U=581621,P=30517] findOnPath()                  Found "squashfuse_ll" at "/usr/libexec/apptainer/bin/squashfuse_ll"
+DEBUG   [U=581621,P=30517] findOnPath()                  Found "fuse2fs" at "/usr/libexec/apptainer/bin/fuse2fs"
+DEBUG   [U=581621,P=30517] findOnPath()                  Found "fuse-overlayfs" at "/usr/libexec/apptainer/bin/fuse-overlayfs"
+DEBUG   [U=581621,P=30517] findOnPath()                  Found "gocryptfs" at "/usr/libexec/apptainer/bin/gocryptfs"
+DEBUG   [U=581621,P=30517] InitImageDrivers()            squashfuse_ll supports -o uid
+DEBUG   [U=581621,P=30517] InitImageDrivers()            Setting ImageDriver to fuseapps
+WARNING [U=581621,P=30517] removeNamespace()             Not virtualizing pid namespace by configuration
+DEBUG   [U=581621,P=30517] prepareAutofs()               Found "/proc/sys/fs/binfmt_misc" as autofs mount point
+DEBUG   [U=581621,P=30517] prepareAutofs()               Found "/cluster/apps" as autofs mount point
+DEBUG   [U=581621,P=30517] prepareAutofs()               Found "/cluster/home" as autofs mount point
+DEBUG   [U=581621,P=30517] prepareAutofs()               Found "/cluster/project" as autofs mount point
+DEBUG   [U=581621,P=30517] prepareAutofs()               Found "/cluster/scratch" as autofs mount point
+DEBUG   [U=581621,P=30517] prepareAutofs()               Found "/cluster/work" as autofs mount point
+DEBUG   [U=581621,P=30517] prepareAutofs()               Found "/nfs" as autofs mount point
+DEBUG   [U=581621,P=30517] prepareAutofs()               Found "/nfs4" as autofs mount point
+DEBUG   [U=581621,P=30517] keepAutofsMount()             Open file descriptor for /cluster/home/schaererm
+DEBUG   [U=581621,P=30517] prepareAutofs()               Could not keep file descriptor for user bind path /scratch/tmp.16966774.schaererm: no mount point
+DEBUG   [U=581621,P=30517] keepAutofsMount()             Open file descriptor for /cluster/work/bokulich/schaererm/industrialization2/output
+DEBUG   [U=581621,P=30517] keepAutofsMount()             Open file descriptor for /cluster/work/bokulich/DATABASES
+DEBUG   [U=581621,P=30517] keepAutofsMount()             Open file descriptor for /cluster/work/bokulich/schaererm/db-cache
+DEBUG   [U=581621,P=30517] prepareAutofs()               Could not keep file descriptor for bind path /etc/localtime: no mount point
+DEBUG   [U=581621,P=30517] prepareAutofs()               Could not keep file descriptor for bind path /etc/hosts: no mount point
+DEBUG   [U=581621,P=30517] prepareAutofs()               Could not keep file descriptor for home directory /cluster/home/schaererm/q2_home: lstat /cluster/home/schaererm/q2_home: no such file or directory
+DEBUG   [U=581621,P=30517] keepAutofsMount()             Open file descriptor for /cluster/work/bokulich/schaererm/industrialization2/work/3c/c6d466b23482174026ae84e483cbea
+DEBUG   [U=581621,P=30517] Init()                        Image format detection
+DEBUG   [U=581621,P=30517] Init()                        Check for sandbox image format
+DEBUG   [U=581621,P=30517] Init()                        sandbox format initializer returned: not a directory image
+DEBUG   [U=581621,P=30517] Init()                        Check for sif image format
+DEBUG   [U=581621,P=30517] Init()                        sif image format detected
+DEBUG   [U=581621,P=30517] setSessionLayer()             Using overlay because it is not disabled
+DEBUG   [U=581621,P=30517] PrepareConfig()               image driver is fuseapps
+VERBOSE [U=581621,P=30509]  wait_child()                  stage 1 exited with status 0
+DEBUG   [U=581621,P=30509]  cleanup_fd()                  Close file descriptor 4
+DEBUG   [U=581621,P=30509]  cleanup_fd()                  Close file descriptor 6
+DEBUG   [U=581621,P=30509]  cleanup_fd()                  Close file descriptor 7
+DEBUG   [U=581621,P=30509]  init()                        Set child signal mask
+DEBUG   [U=581621,P=30509]  init()                        Create socketpair for master communication channel
+DEBUG   [U=581621,P=30509]  init()                        Create RPC socketpair for communication between stage 2 and RPC server
+VERBOSE [U=581621,P=30509]  user_namespace_init()         Create user namespace
+VERBOSE [U=581621,P=30509]  create_namespace()            Create user namespace
+VERBOSE [U=65534,P=30509]  init()                        Spawn master process
+DEBUG   [U=65534,P=30509]  setup_userns_mappings()       Write deny to setgroups file
+DEBUG   [U=65534,P=30509]  setup_userns_mappings()       Write to GID map
+DEBUG   [U=65534,P=30509]  setup_userns_mappings()       Write to UID map
+DEBUG   [U=581621,P=30524]  set_parent_death_signal()     Set parent death signal to 9
+VERBOSE [U=581621,P=30524]  create_namespace()            Create mount namespace
+VERBOSE [U=581621,P=30509]  enter_namespace()             Entering in mount namespace
+DEBUG   [U=581621,P=30509]  enter_namespace()             Opening namespace file ns/mnt
+VERBOSE [U=581621,P=30524]  create_namespace()            Create mount namespace
+VERBOSE [U=581621,P=30527]  init()                        Spawn RPC server
+DEBUG   [U=581621,P=30527] func1()                       executablePath is /usr/libexec/apptainer/bin/starter
+DEBUG   [U=581621,P=30527] func1()                       starter was not relocated from /usr/libexec
+DEBUG   [U=581621,P=30527] func1()                       Install prefix is /usr
+DEBUG   [U=581621,P=30509] func1()                       executablePath is /usr/libexec/apptainer/bin/starter
+DEBUG   [U=581621,P=30509] func1()                       starter was not relocated from /usr/libexec
+DEBUG   [U=581621,P=30509] func1()                       Install prefix is /usr
+DEBUG   [U=581621,P=30509] startup()                     apptainer runtime engine selected
+VERBOSE [U=581621,P=30509] startup()                     Execute master process
+DEBUG   [U=581621,P=30527] startup()                     apptainer runtime engine selected
+VERBOSE [U=581621,P=30527] startup()                     Serve RPC requests
+DEBUG   [U=581621,P=30509] findOnPath()                  Found "squashfuse_ll" at "/usr/libexec/apptainer/bin/squashfuse_ll"
+DEBUG   [U=581621,P=30509] findOnPath()                  Found "fuse2fs" at "/usr/libexec/apptainer/bin/fuse2fs"
+DEBUG   [U=581621,P=30509] findOnPath()                  Found "fuse-overlayfs" at "/usr/libexec/apptainer/bin/fuse-overlayfs"
+DEBUG   [U=581621,P=30509] findOnPath()                  Found "gocryptfs" at "/usr/libexec/apptainer/bin/gocryptfs"
+DEBUG   [U=581621,P=30509] InitImageDrivers()            squashfuse_ll supports -o uid
+DEBUG   [U=581621,P=30509] InitImageDrivers()            Setting ImageDriver to fuseapps
+DEBUG   [U=581621,P=30509] setupSessionLayout()          Using Layer system: overlay
+DEBUG   [U=581621,P=30509] setupOverlayLayout()          Creating overlay SESSIONDIR layout
+DEBUG   [U=581621,P=30509] addRootfsMount()              Mount rootfs in read-only mode
+DEBUG   [U=581621,P=30509] addRootfsMount()              Image type is 4096
+DEBUG   [U=581621,P=30509] addRootfsMount()              Mounting block [squashfs] image: /cluster/work/bokulich/SINGULARITY_IMGS/moshpit-2026.7.0.sif
+DEBUG   [U=581621,P=30509] addKernelMount()              Checking configuration file for 'mount proc'
+DEBUG   [U=581621,P=30509] addKernelMount()              Adding proc to mount list
+VERBOSE [U=581621,P=30509] addKernelMount()              Default mount: /proc:/proc
+DEBUG   [U=581621,P=30509] addKernelMount()              Checking configuration file for 'mount sys'
+DEBUG   [U=581621,P=30509] addKernelMount()              Adding sysfs to mount list
+VERBOSE [U=581621,P=30509] addKernelMount()              Default mount: /sys:/sys
+DEBUG   [U=581621,P=30509] addDevMount()                 Checking configuration file for 'mount dev'
+DEBUG   [U=581621,P=30509] addDevMount()                 Adding dev to mount list
+VERBOSE [U=581621,P=30509] addDevMount()                 Default mount: /dev:/dev
+DEBUG   [U=581621,P=30509] addHostMount()                Not mounting host file systems per configuration
+VERBOSE [U=581621,P=30509] addBindsMount()               Found 'bind path' = /etc/localtime, /etc/localtime
+VERBOSE [U=581621,P=30509] addBindsMount()               Found 'bind path' = /etc/hosts, /etc/hosts
+DEBUG   [U=581621,P=30509] addHomeStagingDir()           Using session directory for home directory
+DEBUG   [U=581621,P=30509] addHomeMount()                Adding home directory mount [/var/lib/apptainer/mnt/session/home/qiime2:/home/qiime2] to list using layer: overlay
+DEBUG   [U=581621,P=30509] addUserbindsMount()           Adding /cluster/home/schaererm to mount list
+DEBUG   [U=581621,P=30509] addUserbindsMount()           Adding /scratch/tmp.16966774.schaererm to mount list
+DEBUG   [U=581621,P=30509] addUserbindsMount()           Adding /cluster/work/bokulich/schaererm/industrialization2/output to mount list
+DEBUG   [U=581621,P=30509] addUserbindsMount()           Adding /cluster/work/bokulich/DATABASES to mount list
+DEBUG   [U=581621,P=30509] addUserbindsMount()           Adding /cluster/work/bokulich/schaererm/db-cache to mount list
+DEBUG   [U=581621,P=30509] addTmpMount()                 Checking for 'mount tmp' in configuration file
+DEBUG   [U=581621,P=30509] addScratchMount()             Not mounting scratch directory: Not requested
+DEBUG   [U=581621,P=30509] addLibsMount()                Checking for 'user bind control' in configuration file
+DEBUG   [U=581621,P=30509] addFilesMount()               Checking for 'user bind control' in configuration file
+DEBUG   [U=581621,P=30509] addResolvConfMount()          Adding symlink /etc/resolv.conf to /run/resolvconf/resolv.conf at /overlay-lowerdir/etc/resolv.conf
+DEBUG   [U=581621,P=30509] addResolvConfMount()          Adding /run/resolvconf to mount list
+VERBOSE [U=581621,P=30509] addResolvConfMount()          Default mount: /etc/resolv.conf:/etc/resolv.conf
+DEBUG   [U=581621,P=30509] addHostnameMount()            Skipping hostname mount, not virtualizing UTS namespace on user request
+DEBUG   [U=581621,P=30509] create()                      Mount all
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting tmpfs to /var/lib/apptainer/mnt/session
+DEBUG   [U=581621,P=30509] func2()                       Starting image driver fuseapps
+DEBUG   [U=581621,P=30509] Mount()                       Executing /usr/libexec/apptainer/bin/squashfuse_ll -f -o allow_other,ro,uid=581621,gid=480247,offset=40960 /proc/self/fd/3 /var/lib/apptainer/mnt/session/rootfs
+DEBUG   [U=581621,P=30509] Mount()                       /var/lib/apptainer/mnt/session/rootfs mounted in 25ms
+DEBUG   [U=581621,P=30509] createCwdDir()                Using /cluster/work/bokulich/schaererm/industrialization2/work/3c/c6d466b23482174026ae84e483cbea as current working directory
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting overlay to /var/lib/apptainer/mnt/session/final
+DEBUG   [U=581621,P=30509] mountGeneric()                Unmounting and remounting overlay
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final
+DEBUG   [U=581621,P=30509] setPropagationMount()         Set RPC mount propagation flag to SLAVE
+VERBOSE [U=581621,P=30509] Passwd()                      Checking for template passwd file: /var/lib/apptainer/mnt/session/rootfs/etc/passwd
+VERBOSE [U=581621,P=30509] Passwd()                      Creating passwd content
+VERBOSE [U=581621,P=30509] Passwd()                      Creating template passwd file and injecting user data: /var/lib/apptainer/mnt/session/rootfs/etc/passwd
+DEBUG   [U=581621,P=30509] addIdentityMount()            Adding /etc/passwd to mount list
+VERBOSE [U=581621,P=30509] addIdentityMount()            Default mount: /etc/passwd:/etc/passwd
+VERBOSE [U=581621,P=30509] Group()                       Checking for template group file: /var/lib/apptainer/mnt/session/rootfs/etc/group
+VERBOSE [U=581621,P=30509] Group()                       Creating group content
+DEBUG   [U=581621,P=30509] addIdentityMount()            Adding /etc/group to mount list
+VERBOSE [U=581621,P=30509] addIdentityMount()            Default mount: /etc/group:/etc/group
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /dev to /var/lib/apptainer/mnt/session/final/dev
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /etc/localtime to /var/lib/apptainer/mnt/session/final/etc/localtime
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/etc/localtime
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /etc/hosts to /var/lib/apptainer/mnt/session/final/etc/hosts
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/etc/hosts
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /proc to /var/lib/apptainer/mnt/session/final/proc
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /sys to /var/lib/apptainer/mnt/session/final/sys
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /var/lib/apptainer/mnt/session/home/qiime2 to /var/lib/apptainer/mnt/session/final/home/qiime2
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/home/qiime2
+DEBUG   [U=581621,P=30509] func1()                       Container /tmp resolves to "/tmp"
+DEBUG   [U=581621,P=30509] func1()                       Container /var/tmp resolves to "/var/tmp"
+VERBOSE [U=581621,P=30509] func1()                       Default mount: /tmp:/tmp
+VERBOSE [U=581621,P=30509] func1()                       Default mount: /var/tmp:/var/tmp
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /tmp to /var/lib/apptainer/mnt/session/final/tmp
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/tmp
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /var/tmp to /var/lib/apptainer/mnt/session/final/var/tmp
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/var/tmp
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /run/resolvconf to /var/lib/apptainer/mnt/session/final/run/resolvconf
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /var/lib/apptainer/mnt/session/etc/passwd to /var/lib/apptainer/mnt/session/final/etc/passwd
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /var/lib/apptainer/mnt/session/etc/group to /var/lib/apptainer/mnt/session/final/etc/group
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /scratch/tmp.16966774.schaererm to /var/lib/apptainer/mnt/session/final/scratch/tmp.16966774.schaererm
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/scratch/tmp.16966774.schaererm
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /cluster/home/schaererm to /var/lib/apptainer/mnt/session/final/cluster/home/schaererm
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/cluster/home/schaererm
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /cluster/work/bokulich/DATABASES to /var/lib/apptainer/mnt/session/final/cluster/work/bokulich/DATABASES
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/cluster/work/bokulich/DATABASES
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /cluster/work/bokulich/schaererm/db-cache to /var/lib/apptainer/mnt/session/final/cluster/work/bokulich/schaererm/db-cache
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/cluster/work/bokulich/schaererm/db-cache
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /cluster/work/bokulich/schaererm/industrialization2/output to /var/lib/apptainer/mnt/session/final/cluster/work/bokulich/schaererm/industrialization2/output
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/cluster/work/bokulich/schaererm/industrialization2/output
+DEBUG   [U=581621,P=30509] isMounted()                   Checking if /var/lib/apptainer/mnt/session/final/cluster/work/bokulich/schaererm/industrialization2/work/3c/c6d466b23482174026ae84e483cbea is already mounted
+DEBUG   [U=581621,P=30509] mountGeneric()                Mounting /cluster/work/bokulich/schaererm/industrialization2/work/3c/c6d466b23482174026ae84e483cbea to /var/lib/apptainer/mnt/session/final/cluster/work/bokulich/schaererm/industrialization2/work/3c/c6d466b23482174026ae84e483cbea
+DEBUG   [U=581621,P=30509] mountGeneric()                Remounting /var/lib/apptainer/mnt/session/final/cluster/work/bokulich/schaererm/industrialization2/work/3c/c6d466b23482174026ae84e483cbea
+DEBUG   [U=581621,P=30509] create()                      Chroot into /var/lib/apptainer/mnt/session/final
+DEBUG   [U=581621,P=30527] Chroot()                      Hold reference to host / directory
+DEBUG   [U=581621,P=30527] Chroot()                      Called pivot_root on /var/lib/apptainer/mnt/session/final
+DEBUG   [U=581621,P=30509] create()                      Fallback to move/chroot
+DEBUG   [U=581621,P=30527] Chroot()                      Move /var/lib/apptainer/mnt/session/final as / directory
+DEBUG   [U=581621,P=30527] Chroot()                      Chroot to /var/lib/apptainer/mnt/session/final
+DEBUG   [U=581621,P=30527] Chroot()                      Changing directory to / to avoid getpwd issues
+DEBUG   [U=581621,P=30509] create()                      Chdir into / to avoid errors
+VERBOSE [U=581621,P=30524]  wait_child()                  rpc server exited with status 0
+DEBUG   [U=581621,P=30524]  init()                        Set container privileges
+DEBUG   [U=581621,P=30524]  apply_privileges()            Effective capabilities:   0x0000000000000000
+DEBUG   [U=581621,P=30524]  apply_privileges()            Permitted capabilities:   0x0000000000000000
+DEBUG   [U=581621,P=30524]  apply_privileges()            Bounding capabilities:    0x0000000000000000
+DEBUG   [U=581621,P=30524]  apply_privileges()            Inheritable capabilities: 0x0000000000000000
+DEBUG   [U=581621,P=30524]  apply_privileges()            Ambient capabilities:     0x0000000000000000
+DEBUG   [U=581621,P=30524]  apply_privileges()            Set user ID to 581621
+DEBUG   [U=581621,P=30524]  set_parent_death_signal()     Set parent death signal to 9
+DEBUG   [U=581621,P=30524] func1()                       executablePath is /usr/libexec/apptainer/bin/starter
+DEBUG   [U=581621,P=30524] func1()                       executablePath does not exist, assuming default prefix
+DEBUG   [U=581621,P=30524] startup()                     apptainer runtime engine selected
+VERBOSE [U=581621,P=30524] startup()                     Execute stage 2
+DEBUG   [U=581621,P=30524] StageTwo()                    Entering stage 2
+DEBUG   [U=581621,P=30524] StartProcess()                Setting umask in container to 0022
+DEBUG   [U=581621,P=30524] sylogBuiltin()                Sourcing /.singularity.d/env/01-base.sh
+DEBUG   [U=581621,P=30524] sylogBuiltin()                Sourcing /.singularity.d/env/10-docker2singularity.sh
+DEBUG   [U=581621,P=30524] sylogBuiltin()                Sourcing /.singularity.d/env/90-environment.sh
+DEBUG   [U=581621,P=30524] sylogBuiltin()                Sourcing /.singularity.d/env/94-appsbase.sh
+DEBUG   [U=581621,P=30524] sylogBuiltin()                Sourcing /.singularity.d/env/95-apps.sh
+DEBUG   [U=581621,P=30524] sylogBuiltin()                Sourcing /.singularity.d/env/99-base.sh
+DEBUG   [U=581621,P=30524] sylogBuiltin()                Sourcing /.singularity.d/env/99-runtimevars.sh
+DEBUG   [U=581621,P=30524] sylogBuiltin()                Running action command exec
+DEBUG   [U=581621,P=30509] PostStartProcess()            Post start process

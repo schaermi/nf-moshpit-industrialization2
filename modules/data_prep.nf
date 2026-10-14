@@ -105,7 +105,12 @@ process FETCH_SEQS {
     label "fondue"
     label "needsInternet"
     tag "${_id}"
-    errorStrategy = { Retry.withDelay(task.exitStatus in [125, 126] ? 'ignore' : 'retry', params.retryDelaySeconds) }
+    // 125/126: no sequences available -> skip. 140: walltime hit (hung download); a retry with a
+    // longer limit rarely helps, so give it one more attempt and then skip instead of failing the run.
+    errorStrategy = {
+        def skip = task.exitStatus in [125, 126] || (task.exitStatus == 140 && task.attempt >= 2)
+        Retry.withDelay(skip ? 'ignore' : 'retry', params.retryDelaySeconds)
+    }
     maxRetries 3
 
     input:
