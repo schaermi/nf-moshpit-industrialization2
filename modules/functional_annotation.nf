@@ -164,8 +164,8 @@ process FETCH_EGGNOG_DB {
 
 process EXTRACT_ANNOTATIONS {
     cpus 1
-    memory { 2.GB * task.attempt }
-    time { 2.h * task.attempt }
+    memory { 8.GB * Math.pow(2, task.attempt - 1) }
+    time { 4.h * task.attempt }
     maxRetries 3
     storeDir params.storeDir
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }

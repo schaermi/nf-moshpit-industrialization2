@@ -432,8 +432,8 @@ process INIT_CACHE {
 
 process FETCH_ARTIFACT {
     publishDir params.publishDir, mode: 'copy'
-    memory { 4.GB * task.attempt }
-    time { 2.h * task.attempt }
+    memory { 8.GB * Math.pow(2, task.attempt - 1) }
+    time { 6.h * task.attempt }
     maxRetries 3
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 

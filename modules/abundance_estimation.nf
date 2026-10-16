@@ -63,8 +63,8 @@ process MAP_READS_TO_DEREP_MAGS {
 
 process GET_GENOME_LENGTHS {
     cpus 1
-    memory { 1.GB * task.attempt }
-    time { 20.min * task.attempt }
+    memory { 16.GB * Math.pow(2, task.attempt - 1) }
+    time { 4.h * task.attempt }
     maxRetries 3
     storeDir params.storeDir
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
