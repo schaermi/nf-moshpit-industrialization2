@@ -130,7 +130,7 @@ process ESTIMATE_BRACKEN {
 
 process GET_KRAKEN_FEATURES {
     time { 4.h * task.attempt }
-    memory { 2.GB * task.attempt }
+    memory { 4.GB * Math.pow(2, task.attempt - 1) }
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
@@ -212,7 +212,7 @@ process MAP_KRAKEN2_TAXONOMY_TO_CONTIGS {
 
 process COLLAPSE_CONTIGS {
     time { 4.h * task.attempt }
-    memory { 4.GB * task.attempt }
+    memory { 8.GB * Math.pow(2, task.attempt - 1) }
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir
@@ -307,8 +307,9 @@ process CLASSIFY_KAIJU {
 
 process DRAW_TAXA_BARPLOT {
     time { 2.h * task.attempt }
-    memory { 2.GB * task.attempt }
+    memory { 16.GB * Math.pow(2, task.attempt - 1) }
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
+    maxRetries 3
     publishDir params.publishDir, mode: 'copy'
 
     input:

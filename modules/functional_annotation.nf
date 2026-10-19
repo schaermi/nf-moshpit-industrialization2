@@ -208,7 +208,7 @@ process EXTRACT_ANNOTATIONS {
 
 process MULTIPLY_TABLES {
     cpus 1
-    memory { 2.GB * task.attempt }
+    memory { 4.GB * Math.pow(2, task.attempt - 1) }
     time { 30.min * task.attempt }
     maxRetries 3
     storeDir params.storeDir
@@ -242,8 +242,9 @@ process MULTIPLY_TABLES {
 
 process DRAW_ANNOTATION_BARPLOT {
     time { 2.h * task.attempt }
-    memory { 2.GB * task.attempt }
+    memory { 16.GB * Math.pow(2, task.attempt - 1) }
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
+    maxRetries 3
     publishDir params.publishDir, mode: 'copy'
 
     input:
