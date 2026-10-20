@@ -164,7 +164,9 @@ process FETCH_EGGNOG_DB {
 
 process EXTRACT_ANNOTATIONS {
     cpus 1
-    memory { 8.GB * Math.pow(2, task.attempt - 1) }
+    memory { 64.GB * Math.pow(2, task.attempt - 1) }
+    // QIIME 2 copies the input artifact into the node-local $TMPDIR; grow it on retry
+    clusterOptions { "--tmp=${200 * task.attempt}G" }
     time { 4.h * task.attempt }
     maxRetries 3
     storeDir params.storeDir
