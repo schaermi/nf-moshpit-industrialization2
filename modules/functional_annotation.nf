@@ -165,10 +165,11 @@ process FETCH_EGGNOG_DB {
 process EXTRACT_ANNOTATIONS {
     cpus 1
     // contig-level eggNOG tables are far larger than MAG-level ones, so start higher; double on each retry
-    memory { (input_type == "contigs" ? 256.GB : 64.GB) * params.mem_intensive_task_multiplier * Math.pow(2, task.attempt - 1) }
+    // contigs OOM'd at 128/256/512 GB (MaxRSS == ReqMem each time), so start at 1 TB; cap at what the 2 TB nodes can grant
+    memory { [(input_type == "contigs" ? 1024.GB : 64.GB) * params.mem_intensive_task_multiplier * Math.pow(2, task.attempt - 1), 1900.GB].min() }
     // QIIME 2 copies the input artifact into the node-local $TMPDIR; grow it on retry
     clusterOptions { "--tmp=${200 * task.attempt}G" }
-    time { 4.h * task.attempt }
+    time { 8.h * task.attempt }
     maxRetries 3
     storeDir params.storeDir
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
