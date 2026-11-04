@@ -50,9 +50,9 @@ workflow ASSEMBLE {
                 indexed_contigs_with_reads = indexed_contigs.combine(reads, by: 0)
 
                 mapped_reads = MAP_READS_TO_CONTIGS(indexed_contigs_with_reads)
-                mapped_reads_all = mapped_reads | collect(flat: false)
-                maps_all = COLLATE_MAPS(mapped_reads_all, "${params.runId}_reads_to_contigs", "assembly collate-alignments", "--i-alignment-maps", "--o-collated-alignment-maps", true)
                 if (params.assembly_qc.quast.enabled && params.assembly_qc.quast.useMappedReads) {
+                    mapped_reads_all = mapped_reads | collect(flat: false)
+                    maps_all = COLLATE_MAPS(mapped_reads_all, "${params.runId}_reads_to_contigs", "assembly collate-alignments", "--i-alignment-maps", "--o-collated-alignment-maps", true)
                     EVALUATE_CONTIGS_QUAST(contigs_all, maps_all, q2_cache)
                     qzv_outputs = qzv_outputs.mix(EVALUATE_CONTIGS_QUAST.out.qzv)
                 } else if (params.assembly_qc.quast.enabled) {
@@ -60,7 +60,7 @@ workflow ASSEMBLE {
                     qzv_outputs = qzv_outputs.mix(EVALUATE_CONTIGS_QUAST_NO_READS.out.qzv)
                 }
                 if (params.abundance_estimation.enabledFor.contains("contigs")) {
-                    contig_abundance = CONTIG_ABUNDANCE(contigs_all, maps_all, q2_cache)
+                    contig_abundance = CONTIG_ABUNDANCE(contigs_all, mapped_reads, q2_cache)
                 } else {
                     contig_abundance = ""
                 }

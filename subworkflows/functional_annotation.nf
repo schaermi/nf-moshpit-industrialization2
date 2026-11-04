@@ -2,7 +2,9 @@ include { SEARCH_ORTHOLOGS_EGGNOG as SEARCH_ORTHOLOGS_MAGS_DEREP; SEARCH_ORTHOLO
 include { ANNOTATE_EGGNOG as ANNOTATE_MAGS_DEREP; ANNOTATE_EGGNOG as ANNOTATE_CONTIGS; ANNOTATE_EGGNOG as ANNOTATE_MAGS } from '../modules/functional_annotation'
 include { COLLATE_PARTITIONS as COLLATE_ANNOTATIONS_CONTIGS; COLLATE_PARTITIONS as COLLATE_ANNOTATIONS_MAGS; COLLATE_PARTITIONS_DEREP as COLLATE_ANNOTATIONS_MAGS_DEREP} from '../modules/data_prep'
 include { COLLATE_PARTITIONS as COLLATE_HITS_CONTIGS; COLLATE_PARTITIONS as COLLATE_HITS_MAGS; COLLATE_PARTITIONS_DEREP as COLLATE_HITS_MAGS_DEREP } from '../modules/data_prep'
+include { COLLATE_PARTITIONS as COLLATE_ANNOTATION_BATCHES } from '../modules/data_prep'
 include { EXTRACT_ANNOTATIONS; MULTIPLY_TABLES; DRAW_ANNOTATION_BARPLOT } from '../modules/functional_annotation'
+include { EXTRACT_ANNOTATIONS as EXTRACT_ANNOTATIONS_BATCH; MERGE_EXTRACTED_ANNOTATIONS; COMPARE_EXTRACTED_ANNOTATIONS } from '../modules/functional_annotation'
 include { FETCH_ARTIFACT as FETCH_MULTIPLIED_TABLE } from '../modules/data_prep'
 include { FETCH_ARTIFACT as FETCH_ARTIFACT_ORTHOLOGS } from '../modules/data_prep'
 include { FETCH_ARTIFACT as FETCH_ARTIFACT_ANNOTATIONS } from '../modules/data_prep'
@@ -138,12 +140,74 @@ workflow ANNOTATE_EGGNOG_CONTIGS {
         collated_annotations = COLLATE_ANNOTATIONS_CONTIGS(ANNOTATE_CONTIGS.out.annotations | collect(flat: false), "${params.runId}_eggnog_annotations_contigs", "types collate-ortholog-annotations", "--i-ortholog-annotations", "--o-collated-annotations", true)
 
         if (params.functional_annotation.annotation.extract != "") {
-            annotation_type = Channel.of(params.functional_annotation.annotation.extract.types.split(","))
-            EXTRACT_ANNOTATIONS(collated_annotations, annotation_type, "contigs", q2_cache)
-            if (params.functional_annotation.annotation.extract.fetchArtifact) {
-                FETCH_ARTIFACT_EXTRACTED_ANNOTATIONS(EXTRACT_ANNOTATIONS.out.counts_per_genome | map { _type, key -> key })
-                FETCH_ARTIFACT_EXTRACTED_ANNOTATION_MAP(EXTRACT_ANNOTATIONS.out.annotation_map | map { _type, key -> key })
-                FETCH_ARTIFACT_EXTRACTED_ANNOTATIONS_PER_CONTIG(EXTRACT_ANNOTATIONS.out.counts_per_contig | map { _type, key -> key })
+            def extract_params = params.functional_annotation.annotation.extract
+            def annotation_types = extract_params.types.split(",").toList()
+            // kegg_ko and ec have too many distinct values to build the dense contig x annotation
+            // table in one go (OOM at 1.9 TB, job 19360090), so extract those per batch and merge
+            def batched_types = extract_params.batchedTypes.split(",").toList().findAll { it in annotation_types }
+            // validateBatched: also run this single-run type through batching and compare the results
+            def validate_type = extract_params.validateBatched
+            if (validate_type && (validate_type in batched_types || !(validate_type in annotation_types))) {
+                error "extract.validateBatched must be listed in extract.types but not in extract.batchedTypes: ${validate_type}"
+            }
+
+            EXTRACT_ANNOTATIONS(collated_annotations, Channel.fromList(annotation_types - batched_types), "contigs", q2_cache)
+            counts_per_genome = EXTRACT_ANNOTATIONS.out.counts_per_genome
+            annotation_map = EXTRACT_ANNOTATIONS.out.annotation_map
+            counts_per_contig = EXTRACT_ANNOTATIONS.out.counts_per_contig
+
+            def types_to_batch = batched_types + (validate_type ? [validate_type] : [])
+            if (types_to_batch) {
+                annotation_batches = ANNOTATE_CONTIGS.out.annotations
+                    | collect(flat: false)
+                    | flatMap { items ->
+                        def sorted_items = items.sort(false) { it[0].toString() }
+                        sorted_items.collate(extract_params.batchSize).withIndex().collect { batch, batch_id -> tuple(batch_id, batch) }
+                    }
+                    | multiMap { item ->
+                        id_and_paths: item[1]
+                        key: "${params.runId}_eggnog_annotations_contigs_batch_${item[0]}"
+                    }
+                COLLATE_ANNOTATION_BATCHES(annotation_batches.id_and_paths, annotation_batches.key, "types collate-ortholog-annotations", "--i-ortholog-annotations", "--o-collated-annotations", true)
+
+                batch_inputs = COLLATE_ANNOTATION_BATCHES.out
+                    | combine(Channel.fromList(types_to_batch))
+                    | multiMap { item ->
+                        annotation_file: item[0]
+                        annotation_type: item[1]
+                        input_type: "contigs_batch_" + item[0].getName().tokenize("_").last()
+                    }
+                EXTRACT_ANNOTATIONS_BATCH(batch_inputs.annotation_file, batch_inputs.annotation_type, batch_inputs.input_type, q2_cache)
+
+                merge_inputs = EXTRACT_ANNOTATIONS_BATCH.out.counts_per_genome.groupTuple()
+                    | join(EXTRACT_ANNOTATIONS_BATCH.out.annotation_map.groupTuple())
+                    | join(EXTRACT_ANNOTATIONS_BATCH.out.counts_per_contig.groupTuple())
+                    | map { type, per_genome, per_map, per_contig ->
+                        tuple(type, per_genome, per_map, per_contig, type in batched_types ? "" : "_batchcheck")
+                    }
+                MERGE_EXTRACTED_ANNOTATIONS(merge_inputs)
+
+                def batched_only = { it[0] in batched_types }
+                counts_per_genome = counts_per_genome.mix(MERGE_EXTRACTED_ANNOTATIONS.out.counts_per_genome.filter(batched_only))
+                annotation_map = annotation_map.mix(MERGE_EXTRACTED_ANNOTATIONS.out.annotation_map.filter(batched_only))
+                counts_per_contig = counts_per_contig.mix(MERGE_EXTRACTED_ANNOTATIONS.out.counts_per_contig.filter(batched_only))
+
+                if (validate_type) {
+                    def validated_only = { it[0] == validate_type }
+                    comparison = EXTRACT_ANNOTATIONS.out.counts_per_genome.filter(validated_only)
+                        | join(EXTRACT_ANNOTATIONS.out.annotation_map.filter(validated_only))
+                        | join(EXTRACT_ANNOTATIONS.out.counts_per_contig.filter(validated_only))
+                        | join(MERGE_EXTRACTED_ANNOTATIONS.out.counts_per_genome.filter(validated_only))
+                        | join(MERGE_EXTRACTED_ANNOTATIONS.out.annotation_map.filter(validated_only))
+                        | join(MERGE_EXTRACTED_ANNOTATIONS.out.counts_per_contig.filter(validated_only))
+                    COMPARE_EXTRACTED_ANNOTATIONS(comparison)
+                }
+            }
+
+            if (extract_params.fetchArtifact) {
+                FETCH_ARTIFACT_EXTRACTED_ANNOTATIONS(counts_per_genome | map { _type, key -> key })
+                FETCH_ARTIFACT_EXTRACTED_ANNOTATION_MAP(annotation_map | map { _type, key -> key })
+                FETCH_ARTIFACT_EXTRACTED_ANNOTATIONS_PER_CONTIG(counts_per_contig | map { _type, key -> key })
             }
         }
 
@@ -155,6 +219,6 @@ workflow ANNOTATE_EGGNOG_CONTIGS {
         }
     emit:
         collated_orthologs
-        counts_per_contig = EXTRACT_ANNOTATIONS.out.counts_per_contig
-        annotation_map = EXTRACT_ANNOTATIONS.out.annotation_map
+        counts_per_contig
+        annotation_map
 }

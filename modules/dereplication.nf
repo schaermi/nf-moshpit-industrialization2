@@ -1,6 +1,8 @@
 process CALCULATE_MINHASHES {
     label "dereplication"
     storeDir params.storeDir
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
+    maxRetries 3
 
     input:
     path bins_file
@@ -30,6 +32,8 @@ process CALCULATE_MINHASHES {
 process COMPARE_MINHASHES {
     label "dereplication"
     storeDir params.storeDir
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
+    maxRetries 3
 
     input:
     path hashes_file
@@ -97,6 +101,8 @@ process COMPARE_GENOMES_SKANI {
 process DEREPLICATE_MAGS {
     label "dereplication"
     storeDir params.storeDir
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
+    maxRetries 3
 
     input:
     path bins_file

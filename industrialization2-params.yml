@@ -215,6 +215,8 @@ dereplication:
 #    fasterSmall: false
 #    additionalFlags: ""
 
+readMappingLargeSamples: "ERR7528924,ERR8050440,ERR8510354"
+
 abundance_estimation:
   enabledFor: "contigs,derep" # contigs, derep
   fetchArtifact: true
@@ -222,6 +224,7 @@ abundance_estimation:
   min_mapq: 42
   min_query_len: 0
   min_base_quality: 0
+  mergeBatchSize: 30
 
 taxonomic_classification:
   enabledFor: "reads,contigs,mags,derep" # reads, contigs, mags, derep
@@ -268,6 +271,9 @@ functional_annotation:
       max_evalue: 0.00001
       min_score: 0
       fetchArtifact: true
+      batchedTypes: "kegg_ko,ec"
+      batchSize: 20
+      validateBatched: "cog"
   cleanUp: false
   partitionBatchCount: 10
 

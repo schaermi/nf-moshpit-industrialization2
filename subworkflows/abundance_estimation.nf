@@ -3,7 +3,7 @@ include { MAP_READS_TO_DEREP_MAGS } from '../modules/abundance_estimation'
 include { GET_GENOME_LENGTHS as GET_MAG_LENGTHS } from '../modules/abundance_estimation'
 include { GET_GENOME_LENGTHS as GET_CONTIG_LENGTHS } from '../modules/abundance_estimation'
 include { ESTIMATE_ABUNDANCE as ESTIMATE_MAG_ABUNDANCE } from '../modules/abundance_estimation'
-include { ESTIMATE_ABUNDANCE as ESTIMATE_CONTIG_ABUNDANCE } from '../modules/abundance_estimation'
+include { ESTIMATE_SAMPLE_ABUNDANCE; MERGE_FEATURE_TABLES as MERGE_CONTIG_ABUNDANCE_GROUPS; MERGE_FEATURE_TABLES as MERGE_CONTIG_ABUNDANCE } from '../modules/abundance_estimation'
 include { COLLATE_PARTITIONS } from '../modules/data_prep'
 include { FETCH_ARTIFACT as FETCH_ARTIFACT_MAG_ABUNDANCE } from '../modules/data_prep'
 include { FETCH_ARTIFACT as FETCH_ARTIFACT_CONTIG_ABUNDANCE } from '../modules/data_prep'
@@ -39,7 +39,19 @@ workflow CONTIG_ABUNDANCE {
         q2_cache
     main:
         lengths = GET_CONTIG_LENGTHS(contigs, q2_cache, "contigs")
-        abundance = ESTIMATE_CONTIG_ABUNDANCE(maps, lengths, "contigs", q2_cache)
+        sample_tables = ESTIMATE_SAMPLE_ABUNDANCE(maps, lengths, q2_cache)
+        merge_groups = sample_tables
+            | toList
+            | flatMap { tables ->
+                def sorted_tables = tables.sort(false) { it.getName() }
+                sorted_tables.collate(params.abundance_estimation.mergeBatchSize).withIndex().collect { group, group_id -> tuple(group, group_id) }
+            }
+            | multiMap { item ->
+                tables: item[0]
+                key: "${params.runId}_contigs_ft_group_${item[1]}"
+            }
+        merged_groups = MERGE_CONTIG_ABUNDANCE_GROUPS(merge_groups.tables, merge_groups.key)
+        abundance = MERGE_CONTIG_ABUNDANCE(merged_groups | collect, "${params.runId}_contigs_ft")
         if (params.abundance_estimation.fetchArtifact) {
             FETCH_ARTIFACT_CONTIG_ABUNDANCE(abundance)
         }

@@ -211,8 +211,9 @@ process MAP_KRAKEN2_TAXONOMY_TO_CONTIGS {
 }
 
 process COLLAPSE_CONTIGS {
-    time { 4.h * task.attempt }
-    memory { 8.GB * Math.pow(2, task.attempt - 1) }
+    // not yet run at full size; MAP_KRAKEN2_TAXONOMY_TO_CONTIGS OOM'd with 8 GB on the same contig set
+    time { 12.h * task.attempt }
+    memory { 64.GB * Math.pow(2, task.attempt - 1) }
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     maxRetries 3
     storeDir params.storeDir

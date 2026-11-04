@@ -433,7 +433,7 @@ process INIT_CACHE {
 process FETCH_ARTIFACT {
     publishDir params.publishDir, mode: 'copy'
     memory { 8.GB * Math.pow(2, task.attempt - 1) }
-    time { 6.h * task.attempt }
+    time { 12.h * task.attempt }
     maxRetries 3
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
 
@@ -693,7 +693,8 @@ process TABULATE_READ_COUNTS {
 
 process TABULATE_READ_COUNTS_BATCH {
     cpus 1
-    time { 4.h * task.attempt }
+    // decompresses every sample's FASTQs serially; has never finished within 8 h on the full dataset
+    time { 48.h * task.attempt }
     memory { 2.GB * task.attempt }
     maxRetries 3
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
@@ -760,8 +761,8 @@ PY
 
 process MAKE_SAMPLE_REPORT {
     cpus 1
-    memory { 1.GB * task.attempt }
-    time { 30.min * task.attempt }
+    memory { 8.GB * task.attempt }
+    time { 2.h * task.attempt }
     maxRetries 3
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     publishDir params.traceDir, mode: 'copy'
@@ -803,8 +804,8 @@ PY
 
 process MULTIQC {
     cpus 1
-    memory { 2.GB * task.attempt }
-    time { 30.min * task.attempt }
+    memory { 16.GB * task.attempt }
+    time { 4.h * task.attempt }
     maxRetries 3
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
     publishDir "${params.publishDir}/multiqc", mode: 'copy'
@@ -825,10 +826,10 @@ process MULTIQC {
 
 process REPORT_READ_COUNTS {
     cpus 1
-    memory { 2.GB * task.attempt }
+    memory { 8.GB * task.attempt }
     maxRetries 3
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
-    time { 1.h * task.attempt }
+    time { 2.h * task.attempt }
     publishDir params.traceDir, mode: 'copy'
 
     input:
@@ -1019,10 +1020,10 @@ process CLEAN_UP_CACHES {
 
 process MAKE_REPORT {
     cpus 1
-    memory { 2.GB * task.attempt }
+    memory { 8.GB * task.attempt }
     maxRetries 3
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
-    time { 1.h * task.attempt }
+    time { 2.h * task.attempt }
     publishDir params.publishDir, mode: 'copy'
 
     input:

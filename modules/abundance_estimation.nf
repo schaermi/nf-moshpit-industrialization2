@@ -2,6 +2,7 @@ process INDEX_DEREP_MAGS {
     label "indexing"
     storeDir params.storeDir
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
+    maxRetries 3
 
     input:
     path(mags_derep_file)
@@ -102,6 +103,7 @@ process ESTIMATE_ABUNDANCE {
     label "abundanceEstimation"
     storeDir params.storeDir
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
+    maxRetries 3
 
     input:
     path mags_derep_index_file
@@ -133,6 +135,69 @@ process ESTIMATE_ABUNDANCE {
       --i-alignment-maps ${params.q2cacheDir}:${mags_derep_index_file} \
       --i-feature-lengths ${params.q2cacheDir}:${mags_derep_lengths_file} \
       --o-abundances ${params.q2cacheDir}:${key} \
+    && touch ${key}
+    """
+}
+
+// estimate-abundance pivots to a dense samples x contigs table, which cannot fit in memory across
+// all samples. Each contig belongs to one sample and tpm/rpkm normalise per sample, so running one
+// sample per job gives the same values.
+process ESTIMATE_SAMPLE_ABUNDANCE {
+    label "abundanceEstimation"
+    tag "${sample_id}"
+    storeDir params.storeDir
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
+    maxRetries 3
+
+    input:
+    tuple val(sample_id), path(alignment_maps)
+    path lengths_file
+    path q2Cache
+
+    output:
+    path key
+
+    script:
+    key = "${params.runId}_contigs_ft_partitioned_${sample_id}"
+    """
+    qiime mag estimate-abundance \
+      --verbose \
+      --p-metric ${params.abundance_estimation.metric} \
+      --p-min-mapq ${params.abundance_estimation.min_mapq} \
+      --p-min-query-len ${params.abundance_estimation.min_query_len} \
+      --p-min-base-quality ${params.abundance_estimation.min_base_quality} \
+      --p-threads ${task.cpus} \
+      --i-alignment-maps ${params.q2TemporaryCachesDir}/${sample_id}:${alignment_maps} \
+      --i-feature-lengths ${params.q2cacheDir}:${lengths_file} \
+      --o-abundances ${params.q2cacheDir}:${key} \
+    && touch ${key}
+    """
+}
+
+process MERGE_FEATURE_TABLES {
+    cpus 1
+    // biom pads every input table to all features, so cost grows with tables x total features:
+    // merge in groups first rather than passing hundreds of tables with distinct features at once
+    memory { [128.GB * params.mem_intensive_task_multiplier * Math.pow(2, task.attempt - 1), 1900.GB].min() }
+    time { 8.h * task.attempt }
+    maxRetries 3
+    storeDir params.storeDir
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
+
+    input:
+    val tables
+    val key
+
+    output:
+    path "${key}"
+
+    script:
+    def inputFlags = tables.collect { "--i-tables ${params.q2cacheDir}:${new File(it.toString()).getName()}" }.sort().join(' ')
+    """
+    qiime feature-table merge \
+      --verbose \
+      ${inputFlags} \
+      --o-merged-table "${params.q2cacheDir}:${key}" \
     && touch ${key}
     """
 }

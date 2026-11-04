@@ -210,10 +210,135 @@ process EXTRACT_ANNOTATIONS {
     """
 }
 
+// Merges per-batch EXTRACT_ANNOTATIONS outputs under the keys a single run would have written.
+// feature-table merge fails if a contig or sample ID appears in two batches instead of combining them.
+process MERGE_EXTRACTED_ANNOTATIONS {
+    cpus 1
+    // merging stays sparse, unlike the dense contig x annotation table built by extract-annotations
+    memory { [128.GB * params.mem_intensive_task_multiplier * Math.pow(2, task.attempt - 1), 1900.GB].min() }
+    clusterOptions { "--tmp=${200 * task.attempt}G" }
+    time { 8.h * task.attempt }
+    maxRetries 3
+    storeDir params.storeDir
+    errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
+
+    input:
+    tuple val(annotation_type), val(counts_per_genome_batches), val(annotation_map_batches), val(counts_per_contig_batches), val(key_suffix)
+
+    output:
+    tuple val(annotation_type), path(counts_per_genome_key), emit: counts_per_genome
+    tuple val(annotation_type), path(annotation_map_key), emit: annotation_map
+    tuple val(annotation_type), path(counts_per_contig_key), emit: counts_per_contig
+
+    script:
+    if (params.binning.qc.busco.enabled) {
+      counts_per_genome_key = "${params.runId}_contigs_${annotation_type}_${params.binning.qc.busco.selectLineage}${key_suffix}"
+    } else {
+      counts_per_genome_key = "${params.runId}_contigs_${annotation_type}${key_suffix}"
+    }
+    annotation_map_key = "${counts_per_genome_key}_map"
+    counts_per_contig_key = "${counts_per_genome_key}_per_contig"
+    def inputFlags = { keys -> keys.collect { "--i-tables ${params.q2cacheDir}:${new File(it.toString()).getName()}" }.sort().join(' ') }
+    def mapKeys = groovy.json.JsonOutput.toJson(annotation_map_batches.collect { new File(it.toString()).getName() }.sort())
+    """
+    qiime feature-table merge \
+      --verbose \
+      ${inputFlags(counts_per_genome_batches)} \
+      --o-merged-table "${params.q2cacheDir}:${counts_per_genome_key}"
+
+    qiime feature-table merge \
+      --verbose \
+      ${inputFlags(counts_per_contig_batches)} \
+      --o-merged-table "${params.q2cacheDir}:${counts_per_contig_key}"
+
+python3 - <<'PY'
+from collections import defaultdict
+from qiime2 import Artifact, Cache
+
+# no QIIME 2 action merges FeatureMap artifacts, so the merged map is imported (provenance ends here)
+cache = Cache("${params.q2cacheDir}")
+merged = defaultdict(set)
+for key in ${mapKeys}:
+    for annotation, contigs in cache.load(key).view(dict).items():
+        merged[annotation].update(contigs)
+merged = {annotation: list(contigs) for annotation, contigs in merged.items()}
+artifact = Artifact.import_data("FeatureMap[FunctionToContigs]", merged, view_type=dict)
+cache.save(artifact, "${annotation_map_key}")
+PY
+
+    touch ${counts_per_genome_key} ${annotation_map_key} ${counts_per_contig_key}
+    """
+}
+
+// Checks batched extraction against a stored single-run result, ignoring row/column order.
+// Exit 3 means the outputs differ, which a retry cannot fix.
+process COMPARE_EXTRACTED_ANNOTATIONS {
+    cpus 1
+    memory { 256.GB * params.mem_intensive_task_multiplier * Math.pow(2, task.attempt - 1) }
+    clusterOptions { "--tmp=${200 * task.attempt}G" }
+    time { 8.h * task.attempt }
+    maxRetries 2
+    publishDir params.publishDir, mode: 'copy'
+    errorStrategy = { Retry.withDelay(task.exitStatus == 3 ? 'terminate' : 'retry', params.retryDelaySeconds) }
+
+    input:
+    tuple val(annotation_type), val(single_genome), val(single_map), val(single_contig), val(batched_genome), val(batched_map), val(batched_contig)
+
+    output:
+    path "${params.runId}-contigs-${annotation_type}-batched-comparison.txt"
+
+    script:
+    def keyName = { new File(it.toString()).getName() }
+    """
+python3 - <<'PY' | tee ${params.runId}-contigs-${annotation_type}-batched-comparison.txt
+import sys
+import biom
+from qiime2 import Cache
+
+cache = Cache("${params.q2cacheDir}")
+problems = []
+
+def compare_tables(name, single_key, batched_key):
+    single = cache.load(single_key).view(biom.Table)
+    batched = cache.load(batched_key).view(biom.Table)
+    print(f"{name}: single-run shape {single.shape}, batched shape {batched.shape}")
+    for axis in ("sample", "observation"):
+        only_single = set(single.ids(axis=axis)) - set(batched.ids(axis=axis))
+        only_batched = set(batched.ids(axis=axis)) - set(single.ids(axis=axis))
+        if only_single or only_batched:
+            problems.append(f"{name}: {axis} IDs differ ({len(only_single)} only in single-run, "
+                            f"{len(only_batched)} only in batched; e.g. {sorted(only_single | only_batched)[:5]})")
+    if problems:
+        return
+    batched = batched.sort_order(single.ids(axis="sample"), axis="sample")
+    batched = batched.sort_order(single.ids(axis="observation"), axis="observation")
+    differing = (single.matrix_data != batched.matrix_data).nnz
+    if differing:
+        problems.append(f"{name}: {differing} cells differ")
+
+compare_tables("counts per genome", "${keyName(single_genome)}", "${keyName(batched_genome)}")
+compare_tables("counts per contig", "${keyName(single_contig)}", "${keyName(batched_contig)}")
+
+single_map = {k: set(v) for k, v in cache.load("${keyName(single_map)}").view(dict).items()}
+batched_map = {k: set(v) for k, v in cache.load("${keyName(batched_map)}").view(dict).items()}
+print(f"annotation map: single-run {len(single_map)} annotations, batched {len(batched_map)}")
+if single_map != batched_map:
+    problems.append("annotation map: contents differ")
+
+for problem in problems:
+    print(f"MISMATCH {problem}")
+print("RESULT: " + ("outputs differ" if problems else "outputs match"))
+sys.exit(3 if problems else 0)
+PY
+    exit \${PIPESTATUS[0]}
+    """
+}
+
 process MULTIPLY_TABLES {
     cpus 1
-    memory { 4.GB * Math.pow(2, task.attempt - 1) }
-    time { 30.min * task.attempt }
+    // contig tables have never run through this step at full size, so start higher than for MAGs
+    memory { (input_type == "contigs" ? 64.GB : 4.GB) * Math.pow(2, task.attempt - 1) }
+    time { (input_type == "contigs" ? 4.h : 30.min) * task.attempt }
     maxRetries 3
     storeDir params.storeDir
     errorStrategy = { Retry.withDelay('retry', params.retryDelaySeconds) }
