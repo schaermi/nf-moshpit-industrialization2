@@ -1,0 +1,73 @@
+QIIME 2 CACHE FILE COUNTS: /cluster/work/bokulich/schaererm/industrialization2/output/caches/main
+Finished: 2026-11-09 12:20:21
+
+Keys                 : 147
+Artifacts in data/   : 147
+Unreferenced artifacts: 0  (no key or pool points to them)
+Pools                : 0
+processes/ entries   : 367
+
+== ARTIFACT TYPES, BY ESTIMATED FILES ==
+Estimated total = keys x mean files of the sampled keys (3 per type).
+    est. files    keys     files/key  provenance  type
+     5,502,560     112        49,130        100%  industrialization2_contigs_ft_partitioned
+       388,596      13        29,892         99%  industrialization2_eggnog_annotations_contigs
+        93,594       1        93,594        100%  industrialization2_kraken_feature_map_contigs
+        93,594       1        93,594        100%  industrialization2_kraken_taxonomy_contigs
+        85,568       1        85,568         99%  industrialization2_kraken_outputs_contigs
+        85,568       1        85,568         99%  industrialization2_kraken_reports_contigs
+        84,688       1        84,688        100%  industrialization2_contigs_caz_bacteria_odb12
+        84,688       1        84,688        100%  industrialization2_contigs_caz_bacteria_odb12_map
+        84,688       1        84,688        100%  industrialization2_contigs_caz_bacteria_odb12_per_contig
+        84,688       1        84,688        100%  industrialization2_contigs_cog_bacteria_odb12
+        84,688       1        84,688        100%  industrialization2_contigs_cog_bacteria_odb12_map
+        84,688       1        84,688        100%  industrialization2_contigs_cog_bacteria_odb12_per_contig
+        67,768       1        67,768         99%  industrialization2_eggnog_orthologs_contigs
+        63,398       1        63,398         99%  industrialization2_bracken_reports_reads
+        63,389       1        63,389         99%  industrialization2_kraken_outputs_reads
+        63,389       1        63,389         99%  industrialization2_kraken_reports_reads
+        62,508       1        62,508        100%  industrialization2_bracken_feature_table_reads
+        62,508       1        62,508        100%  industrialization2_bracken_taxonomy_reads
+        49,964       1        49,964         98%  industrialization2_contigs
+        49,085       1        49,085        100%  industrialization2_contig_qc_results
+        49,085       1        49,085        100%  industrialization2_quast_reference_genomes
+        49,085       1        49,085        100%  industrialization2_quast_results_table
+        49,080       1        49,080        100%  industrialization2_contigs_lengths_bacteria_odb12
+        23,174       1        23,174         96%  industrialization2_fastp_reports
+Estimated total in keyed artifacts: 7,410,041 files
+
+== SAMPLED KEYS ==
+       files    provenance  key
+      62,508        62,504  industrialization2_bracken_feature_table_reads
+      63,398        62,504  industrialization2_bracken_reports_reads
+      62,508        62,504  industrialization2_bracken_taxonomy_reads
+      49,085        49,081  industrialization2_contig_qc_results
+      49,964        49,071  industrialization2_contigs
+      84,688        84,684  industrialization2_contigs_caz_bacteria_odb12
+      84,688        84,684  industrialization2_contigs_caz_bacteria_odb12_map
+      84,688        84,684  industrialization2_contigs_caz_bacteria_odb12_per_contig
+      84,688        84,684  industrialization2_contigs_cog_bacteria_odb12
+      84,688        84,684  industrialization2_contigs_cog_bacteria_odb12_map
+      84,688        84,684  industrialization2_contigs_cog_bacteria_odb12_per_contig
+      49,130        49,126  industrialization2_contigs_ft_partitioned_ERR11472947
+      49,130        49,126  industrialization2_contigs_ft_partitioned_ERR13834904
+      49,130        49,126  industrialization2_contigs_ft_partitioned_ERR13834905
+      49,080        49,076  industrialization2_contigs_lengths_bacteria_odb12
+      85,572        84,679  industrialization2_eggnog_annotations_contigs
+       2,052         2,029  industrialization2_eggnog_annotations_contigs_batch_0
+       2,052         2,029  industrialization2_eggnog_annotations_contigs_batch_1
+      67,768        66,875  industrialization2_eggnog_orthologs_contigs
+      23,174        22,280  industrialization2_fastp_reports
+      93,594        93,590  industrialization2_kraken_feature_map_contigs
+      85,568        84,675  industrialization2_kraken_outputs_contigs
+      63,389        62,495  industrialization2_kraken_outputs_reads
+      85,568        84,675  industrialization2_kraken_reports_contigs
+      63,389        62,495  industrialization2_kraken_reports_reads
+      93,594        93,590  industrialization2_kraken_taxonomy_contigs
+      49,085        49,081  industrialization2_quast_reference_genomes
+      49,085        49,081  industrialization2_quast_results_table
+
+== UNREFERENCED ARTIFACTS (first 5) ==
+None
+
+Full lists: /cluster/scratch/schaererm/industrialization2/cache_file_counts_20317296.parts

@@ -1,0 +1,115 @@
+INODE USAGE REPORT: COMPLETE
+Started   : 2026-11-06 09:51:00
+Updated   : 2026-11-07 15:35:31 (1784 min elapsed)
+Scanned   : /cluster/work/bokulich/schaererm, then the rest of /cluster/work/bokulich
+
+== QUOTA (lquota, as of the update time) ==
++-----------------------------+-------------+------------------+------------------+------------------+
+| Storage location:           | Quota type: | Used:            | Soft quota:      | Hard quota:      |
++-----------------------------+-------------+------------------+------------------+------------------+
+| /cluster/work/bokulich      | space       |        173.72 TB |        185.00 TB |        203.50 TB |
+| /cluster/work/bokulich      | files       |         49756884 |         46250000 |         50875000 |
++-----------------------------+-------------+------------------+------------------+------------------+
+Left before the hard limit:        1,118,116
+To delete to get below soft limit: 3,506,884
+
+== YOUR DIRECTORIES: /cluster/work/bokulich/schaererm (19.53M files so far) ==
+Subtotals down to 3 levels, largest first. Parents include their children, so do not add rows up.
+         files   % used  path
+    15,697,706    31.5%  industrialization2
+    15,459,177    31.1%  industrialization2/output
+    15,440,283    31.0%  industrialization2/output/caches
+     3,743,580     7.5%  industrialization-cache
+     3,740,829     7.5%  industrialization-cache/data
+       238,529     0.5%  industrialization2/work
+       140,218     0.3%  industrialization-cache/data/2507e9b2-e149-402d-a5d5-3eee0cb45d3d
+        67,767     0.1%  tmp-cache-dir
+        67,767     0.1%  tmp-cache-dir/tmp-cache
+        53,346     0.1%  tmp-cache-dir/tmp-cache/data
+        18,802     0.0%  industrialization2/output/keys
+        14,418     0.0%  tmp-cache-dir/tmp-cache/processes
+        14,338     0.0%  gut-fungi
+        14,328     0.0%  gut-fungi/data
+         7,521     0.0%  industrialization-cache/data/605ba745-9d50-4246-b219-0b649b9db93b
+         7,118     0.0%  industrialization-cache/data/783345e1-73b4-4bd7-8f64-68b582868370
+         6,293     0.0%  industrialization-cache/data/91f52a64-880a-460a-b04d-bd7fd27a8e7d
+         5,642     0.0%  industrialization-cache/data/216f7bb4-2f14-4195-9386-853afaa39891
+         5,238     0.0%  industrialization-cache/data/28194986-ba81-474d-9ab9-cb6a0b4333ca
+         4,911     0.0%  industrialization-cache/data/5f5c69ea-bc58-4b22-964c-77913a65a94d
+         4,839     0.0%  industrialization-cache/data/a1e9875c-f8e2-4fce-bc5b-fd3129d06dab
+         4,780     0.0%  industrialization-cache/data/713e2be0-125c-417d-bcfb-331d7170f8af
+         4,738     0.0%  industrialization-cache/data/eeb3e619-b290-4dca-98c7-55a205e10dca
+         4,731     0.0%  industrialization-cache/data/0c086dd6-fa81-4efc-9431-14f5b189c0e4
+         4,726     0.0%  industrialization-cache/data/b9f4ec83-9b41-4f32-80af-31515437f86b
+         4,702     0.0%  industrialization-cache/data/2e790284-1c9b-4350-8721-cd11be356f57
+         4,675     0.0%  industrialization-cache/data/14844269-5ad5-4b57-8b22-42ae9466f95f
+         4,662     0.0%  industrialization-cache/data/9330be36-689d-434b-bc5c-0e46bd2d7bdc
+         4,658     0.0%  industrialization-cache/data/9078c20a-e353-4b19-9984-600ca2e7674e
+         4,652     0.0%  industrialization-cache/data/6189e262-1875-4644-9cf0-d08440925cbf
+
+== BIGGEST INDIVIDUAL SUBFOLDERS (4 levels down) ==
+         files   % used  path
+     9,938,760    20.0%  industrialization2/output/caches/main
+        83,657     0.2%  industrialization-cache/data/2507e9b2-e149-402d-a5d5-3eee0cb45d3d/provenance
+        56,556     0.1%  industrialization-cache/data/2507e9b2-e149-402d-a5d5-3eee0cb45d3d/data
+         6,394     0.0%  industrialization2/output/caches/ERR11472806
+         6,392     0.0%  industrialization2/output/caches/ERR8052846
+         6,367     0.0%  industrialization2/output/caches/ERR8484617
+         6,352     0.0%  industrialization2/output/caches/ERR8049998
+         6,351     0.0%  industrialization2/output/caches/ERR8050012
+         6,347     0.0%  industrialization2/output/caches/ERR8055446
+         6,342     0.0%  industrialization2/output/caches/ERR8056431
+         6,333     0.0%  industrialization2/output/caches/SRR23345869
+         6,327     0.0%  industrialization2/output/caches/ERR11473731
+         6,325     0.0%  industrialization2/output/caches/ERR7564463
+         6,321     0.0%  industrialization2/output/caches/ERR11457544
+         6,319     0.0%  industrialization2/output/caches/ERR7361715
+         6,312     0.0%  industrialization2/output/caches/SRR14076560
+         6,311     0.0%  industrialization2/output/caches/ERR7385026
+         6,311     0.0%  industrialization2/output/caches/ERR7530912
+         6,305     0.0%  industrialization2/output/caches/ERR8052114
+         6,304     0.0%  industrialization2/output/caches/ERR7477189
+         6,304     0.0%  industrialization2/output/caches/SRR14076554
+         6,303     0.0%  industrialization2/output/caches/ERR11457926
+         6,302     0.0%  industrialization2/output/caches/ERR11473837
+         6,302     0.0%  industrialization2/output/caches/ERR8052268
+         6,301     0.0%  industrialization2/output/caches/SRR27675067
+         6,300     0.0%  industrialization2/output/caches/ERR11569302
+         6,299     0.0%  industrialization2/output/caches/ERR7477259
+         6,297     0.0%  industrialization2/output/caches/ERR11570100
+         6,296     0.0%  industrialization2/output/caches/ERR11478130
+         6,296     0.0%  industrialization2/output/caches/ERR11504261
+         6,295     0.0%  industrialization2/output/caches/SRR27675041
+         6,294     0.0%  industrialization2/output/caches/ERR11478066
+         6,293     0.0%  industrialization2/output/caches/ERR11564567
+         6,293     0.0%  industrialization2/output/caches/SRR27675044
+         6,292     0.0%  industrialization2/output/caches/ERR11564690
+         6,292     0.0%  industrialization2/output/caches/ERR11564781
+         6,292     0.0%  industrialization2/output/caches/ERR7476787
+         6,292     0.0%  industrialization2/output/caches/SRR20664373
+         6,289     0.0%  industrialization2/output/caches/ERR7366233
+         6,288     0.0%  industrialization2/output/caches/ERR11456924
+
+== OTHER GROUP FOLDERS: /cluster/work/bokulich ==
+         files   % used  path
+    19,526,231    39.2%  schaererm (your directories)
+     8,446,146    17.0%  rhernandez
+     6,259,766    12.6%  lfloerl
+     1,753,530     3.5%  pmomocabr
+     1,199,819     2.4%  fkerff
+       325,361     0.7%  DATABASES
+       216,053     0.4%  mziemski
+        52,141     0.1%  meyeanni
+        10,287     0.0%  alavrinienko
+         2,285     0.0%  jransome
+           823     0.0%  adamova
+           707     0.0%  ebeauchemin
+            48     0.0%  TUTORIAL
+            22     0.0%  SINGULARITY_IMGS
+             7     0.0%  fsandberg
+             1     0.0%  eprestwich
+             1     0.0%  vsomerville
+             1     0.0%  zsebechle
+
+Scan errors: 50560 (usually permission denied; folders behind them are undercounted)
+See: /cluster/scratch/schaererm/industrialization2/inode_usage_19953840.parts/errors.txt
