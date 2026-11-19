@@ -224,7 +224,6 @@ abundance_estimation:
   min_mapq: 42
   min_query_len: 0
   min_base_quality: 0
-  mergeBatchSize: 30
 
 taxonomic_classification:
   enabledFor: "reads,contigs,mags,derep" # reads, contigs, mags, derep
