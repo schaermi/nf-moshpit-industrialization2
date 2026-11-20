@@ -5,6 +5,9 @@ runId: industrialization2
 # Path to where all the outputs will be saved
 outputDir: /cluster/work/bokulich/schaererm/industrialization2/output
 
+# Run-specific QIIME 2 cache for the collation steps' scratch copies (the default in nextflow.config is shared with other jobs)
+q2CollationCacheDir: /cluster/work/bokulich/schaererm/tmp-cache-dir/tmp-cache-industrialization2
+
 # Singularity parameters: path to the SIF image, additional volume mounts and other options
 container: /cluster/work/bokulich/SINGULARITY_IMGS/moshpit-2026.7.0.sif
 # Optional per-plugin overrides (default to container when unset)
@@ -270,9 +273,6 @@ functional_annotation:
       max_evalue: 0.00001
       min_score: 0
       fetchArtifact: true
-      batchedTypes: "kegg_ko,ec"
-      batchSize: 20
-      validateBatched: "cog"
   cleanUp: false
   partitionBatchCount: 10
 

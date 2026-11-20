@@ -7,9 +7,18 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=schaererm@ethz.ch
 #
-# Remove the per-sample contig abundance tables ("<runId>_contigs_ft_partitioned_<sample>") from the main
-# QIIME 2 cache with QIIME 2's own tools, and delete their Nextflow storeDir markers. Each table holds
-# ~49k files, almost all provenance copied from the collated contig lengths.
+# Remove everything the two (now removed) batching schemes left in the main QIIME 2 cache, with QIIME 2's
+# own tools, and delete the matching Nextflow storeDir markers:
+#   contig abundance batching (reverted in 7604902)
+#     <runId>_contigs_ft_partitioned_<sample>        per-sample tables, ~49k files each (mostly provenance)
+#     <runId>_contigs_ft_group_<n>                   group merges
+#   eggNOG extraction batching (removed afterwards)
+#     <runId>_eggnog_annotations_contigs_batch_<n>   collated annotation batches
+#     <runId>_contigs_batch_<n>_<type>[...]          per-batch extraction outputs
+#     <runId>_contigs_<type>[...]_batchcheck[...]    validation run of the batching
+# The final merges of both schemes wrote under the same keys as the normal single-run outputs
+# (<runId>_contigs_ft, <runId>_contigs_<type>[...]). Those keys are removed only if their provenance shows a
+# batch merge ("feature-table merge" or a FeatureMap import), so the reverted pipeline cannot reuse them.
 #
 # Keys are removed one by one with "qiime tools cache-remove". QIIME 2 locks the cache while it changes
 # it, and its garbage collection deletes only artifacts that no key or pool still refers to. A key's
@@ -29,7 +38,17 @@ OUTPUT_DIR="${OUTPUT_DIR:-/cluster/work/bokulich/schaererm/industrialization2/ou
 RUN_ID="${RUN_ID:-industrialization2}"
 CACHE="$OUTPUT_DIR/caches/main"
 MARKERS="$OUTPUT_DIR/keys"
-PREFIX="${RUN_ID}_contigs_ft_partitioned_"
+# Keys only the batching schemes ever wrote (shell globs)
+PATTERNS=(
+  "${RUN_ID}_contigs_ft_partitioned_*"
+  "${RUN_ID}_contigs_ft_group_*"
+  "${RUN_ID}_eggnog_annotations_contigs_batch_*"
+  "${RUN_ID}_contigs_batch_*"
+  "${RUN_ID}_contigs_*_batchcheck*"
+)
+# Keys shared with the normal single-run outputs: removed only if made by a batch merge (see header)
+SHARED_REGEX="^${RUN_ID}_contigs_(ft|caz|cog|kegg_ko|ec)(_.*)?\$"
+export LC_ALL=C   # one sort order for sort and comm
 
 DO_RUN=0
 for a in "$@"; do
@@ -66,13 +85,21 @@ files_quota() {
   lquota "$(dirname "$(dirname "$OUTPUT_DIR")")" 2>&1 | grep -E 'files|Quota type'
 }
 n_artifacts() { ls "$CACHE/data" | wc -l | tr -d ' '; }
+# True if the key's artifact came from "feature-table merge" or an import (how both batch merges wrote)
+batch_made() {
+  local u a
+  u=$(grep -oE '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' "$CACHE/keys/$1" | head -1)
+  a="$CACHE/data/$u/provenance/action/action.yaml"
+  [ -n "$u" ] && [ -f "$a" ] && grep -qE '^[[:space:]]*(action: merge|type: import)[[:space:]]*$' "$a"
+}
 
 echo "CACHE CLEANUP: $([ $DO_RUN = 1 ] && echo REMOVING || echo 'DRY RUN (nothing is removed; add --run)')"
 echo "Started : $(date '+%Y-%m-%d %H:%M:%S')"
 echo "QIIME 2 : $(command -v qiime) (conda env: ${CONDA_DEFAULT_ENV:-?})"
 echo "Cache   : $CACHE"
 echo "Markers : $MARKERS"
-echo "Keys    : ${PREFIX}*"
+echo "Keys    : ${PATTERNS[*]}"
+echo "          + keys matching $SHARED_REGEX made by a batch merge"
 echo
 
 # 1. Nothing may write to the cache while keys are removed
@@ -88,12 +115,24 @@ if [ -n "$busy" ]; then
   echo
 fi
 
-# 2. Plan: the cache keys with this prefix, and the storeDir markers with this prefix
-(cd "$CACHE/keys" && for k in "$PREFIX"*; do echo "$k"; done) > "$WORK/keys.txt"
-(cd "$MARKERS" && for m in "$PREFIX"*; do echo "$m"; done) > "$WORK/markers.txt"
+# 2. Plan: batch-only keys, shared-name keys made by a batch merge, and the storeDir markers of both
+(cd "$CACHE/keys" && for p in "${PATTERNS[@]}"; do for k in $p; do echo "$k"; done; done) | sort -u > "$WORK/batch_keys.txt"
+: > "$WORK/merged_keys.txt"
+(cd "$CACHE/keys" && ls) | grep -E "$SHARED_REGEX" | sort | comm -23 - "$WORK/batch_keys.txt" | while IFS= read -r k; do
+  batch_made "$k" && echo "$k"
+done > "$WORK/merged_keys.txt"
+sort -u "$WORK/batch_keys.txt" "$WORK/merged_keys.txt" > "$WORK/keys.txt"
+# markers: batch-only patterns, plus markers of the shared-name keys being removed
+(cd "$MARKERS" && for p in "${PATTERNS[@]}"; do for m in $p; do echo "$m"; done; done) \
+  | sort -u - <(cd "$MARKERS" && comm -12 <(ls | sort) "$WORK/merged_keys.txt") > "$WORK/markers.txt"
 comm -13 "$WORK/keys.txt" "$WORK/markers.txt" > "$WORK/markers_without_key.txt"
 
 echo "== PLAN =="
+for p in "${PATTERNS[@]}"; do
+  printf '  %-56s %s keys\n' "$p" "$(cd "$CACHE/keys" && for k in $p; do echo "$k"; done | wc -l | tr -d ' ')"
+done
+echo "  shared-name keys made by a batch merge                   $(wc -l < "$WORK/merged_keys.txt" | tr -d ' ') keys"
+sed 's/^/    /' "$WORK/merged_keys.txt"
 echo "Cache keys to remove                     : $(wc -l < "$WORK/keys.txt" | tr -d ' ')"
 echo "  with a storeDir marker                 : $(comm -12 "$WORK/keys.txt" "$WORK/markers.txt" | wc -l | tr -d ' ')"
 echo "storeDir markers with no cache key       : $(wc -l < "$WORK/markers_without_key.txt" | tr -d ' ') (also deleted)"
